@@ -1,0 +1,105 @@
+import React, { createContext, useContext, useEffect, useState } from "react";
+import Translate from "./TranslateData.json";
+import {useFETCH, usePOST } from "../Tools/APIs";
+import { useLocation } from "react-router-dom";
+const ContextAPI = createContext({});
+
+window.localStorage.getItem("language")
+  ? window.localStorage.getItem("language")
+  : window.localStorage.setItem("language", "en");
+
+const ContextProvider = ({ children }) => {
+  const [translat, setTranslat] = useState(
+    window.localStorage.getItem("language")
+  );
+  const [content, setContent] = useState({});
+  const [numberCode, setNumberCode] = useState();
+  const [showPopUp, setShowPopUp] = useState(false);
+  useEffect(() => {
+    if (window.localStorage.getItem("language") === "ar") {
+      document.body.style.direction = "rtl";
+      setContent(Translate.ar);
+    }
+    if (window.localStorage.getItem("language") === "en") {
+      document.body.style.direction = "ltr";
+      setContent(Translate.en);
+    }
+  }, [translat, content]);
+  const { setFormData, handleSubmit,formData } = usePOST({});
+
+  const changeLanguage = () => {
+    setTranslat("ar");
+    setFormData({
+      ...formData, 
+      locale: 'ar',
+    });
+        window.localStorage.setItem("language", "ar");
+  };
+  const changeLanguage2 = () => {
+    setTranslat("en");
+    setFormData({
+      ...formData, 
+      locale: 'en',
+    });
+    window.localStorage.setItem("language", "en");
+  };
+  useEffect(() => {
+    if (Object.keys(formData).length > 0) {
+      handleSubmit('change/locale', '', '', false);
+    }
+  }, [formData]);
+
+  const { pathname } = useLocation();
+  const [test, setTest] = useState("");
+  useEffect(() => {
+    setTest(pathname);
+  }, [pathname]);
+  const { data } = useFETCH(
+    localStorage.getItem("token") ? `profile?test=${test}` : ""
+  );
+  const profile = data?.data.data;
+
+  const [page, setPage] = useState(15);
+  const { data: dataProducts } = useFETCH(
+    `products?local=${localStorage.getItem("language")}`
+  );
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    setProducts(dataProducts?.data.data.slice(0, page));
+  }, [dataProducts?.data.data, page]);
+  useEffect(() => {
+// this for auto update the locale of the current users .
+if(profile?.locale&& profile?.locale?.toLowerCase()!=window.localStorage.getItem("language")){
+  window.localStorage.setItem("language", profile?.locale?.toLowerCase());
+  setTranslat(localStorage.getItem("language"));
+}  }, [profile]);
+
+  
+  return (
+    <ContextAPI.Provider
+      value={{
+        showPopUp,
+        setShowPopUp,
+        content,
+        changeLanguage,
+        changeLanguage2,
+        profile,
+        page,
+        setPage,
+        dataProducts,
+        products,
+        numberCode,
+        setNumberCode,
+        setTest,
+      }}
+    >
+      {children}
+    </ContextAPI.Provider>
+  );
+};
+
+export default ContextProvider;
+
+export const useContextTranslate = () => {
+  return useContext(ContextAPI);
+};
