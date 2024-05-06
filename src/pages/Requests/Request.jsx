@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Currency, Loading, TitleTwo } from "../../components";
+import { Currency, Loading, TitleTwo, CopyableText } from "../../components";
 import { useContextTranslate } from "../../Context/ContextAPI";
 import { Col, Container, Row } from "../../Grid-system";
 import { fileUrl, useFETCH } from "../../Tools/APIs";
@@ -10,7 +10,7 @@ import { FaRegCopy } from "react-icons/fa";
 const Request = () => {
   const { content } = useContextTranslate();
   const { id } = useParams();
-  const { data, isLoading } = useFETCH(
+  const { data, isLoading, reCallUrl } = useFETCH(
     `orders/${id}?local=${localStorage.getItem("language")}`
   );
   const dataAll = data?.data.data;
@@ -19,6 +19,24 @@ const Request = () => {
   useEffect(() => {
     setTimeout(() => setCopy(false), 2000);
   }, [copys]);
+  console.log({ dataAll });
+
+const renderCodes = () =>{
+  var codes = dataAll?.item_codes
+  console.log({ codes });
+  if(codes) {
+    codes = JSON.parse(codes)
+  }
+  console.log({ codes });
+  return codes.map((item, index) => (
+
+   <CopyableText text={item?.code} />
+ 
+   
+  ));
+ }
+
+
   return (
     <section className="py-4">
       <Container>
@@ -207,6 +225,22 @@ const Request = () => {
                         </div>
                       </div>
                     </Col>
+                    {dataAll?.item_codes && (
+                     <Col>
+                     <div className="flex gap-2 mb-2">
+                       <div className="font-semibold text-Pink">
+                         Codes :
+                       </div>
+                       <div
+                    
+                         className={`font-semibold`}
+                       >
+                        { renderCodes()}
+                       </div>
+                       
+                     </div>
+                   </Col>
+                    )}
 
                     {dataAll?.player_name && (
                       <Col>

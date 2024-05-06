@@ -14,7 +14,9 @@ const ProductsOne = () => {
     <section className="py-3 ">
       <Container>
         <TitleTwo title={data?.data.data.name} />
-        <SecProductsOne />
+        <SecProductsOne
+          number = '6'
+        />
       </Container>
     </section>
   );

@@ -63,10 +63,12 @@ const ContextProvider = ({ children }) => {
   const { data: dataProducts } = useFETCH(
     `products?local=${localStorage.getItem("language")}`
   );
+  
   const [products, setProducts] = useState([]);
   useEffect(() => {
     setProducts(dataProducts?.data.data.slice(0, page));
   }, [dataProducts?.data.data, page]);
+  
   useEffect(() => {
 // this for auto update the locale of the current users .
 if(profile?.locale&& profile?.locale?.toLowerCase()!=window.localStorage.getItem("language")){

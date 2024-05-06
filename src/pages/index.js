@@ -2,6 +2,12 @@ export { default as Home } from "./Home/Home";
 export { default as AboutUs } from "./AbooutUs/AboutUs";
 export { default as Products } from "./Products/Products";
 export { default as ProductsOne } from "./Products/Products-One/ProductsOne";
+export { default as ApiProducts } from "./Products/ApiProducts";
+export { default as ApiProductsPackage } from "./Products/ApiProductsPackage";
+//export { default as ApiProductsCounter } from "./Products/ApiProductsCounter";
+
+
+
 export { default as SecProductsOne2 } from "./Products/Products-One/SecProductsOne2";
 export { default as ProductsTwo } from "./Products/ProductsTwo";
 export { default as ProductsThree } from "./Products/ProductsThree";

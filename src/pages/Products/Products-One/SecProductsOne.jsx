@@ -4,7 +4,7 @@ import { Col, Row } from "../../../Grid-system";
 import { useParams } from "react-router-dom";
 import { fileUrl, useFETCH, useFilter } from "../../../Tools/APIs";
 
-const SecProductsOne = () => {
+const SecProductsOne = ({number = 1}) => {
   const { content, profile } = useContextTranslate();
   const { id } = useParams();
   const { filter } = useFilter();
@@ -53,7 +53,7 @@ const SecProductsOne = () => {
                   image={fileUrl + e.image}
                   link={
                     e.is_available
-                      ? `/products/products-1/packages/${e.id}`
+                      ? `/products/products-${number}/packages/${e.id}`
                       : ""
                   }
                   title={e.name}

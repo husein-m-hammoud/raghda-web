@@ -5,17 +5,20 @@ import {
   FilterOrderStatus,
   Loading,
   TitleTwo,
+  CopyableText
 } from "../../components";
 import { useContextTranslate } from "../../Context/ContextAPI";
 import { BiShow } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import { fileUrl, useFETCH, useFilter } from "../../Tools/APIs";
+import { fileUrl, useFETCH, useFilter, checkOrderStatus } from "../../Tools/APIs";
 import Pagination from "../../Tools/Pagination";
+import React, { useEffect } from "react";
+
 
 const Orders = () => {
   const { content } = useContextTranslate();
   const { filter } = useFilter({});
-  const { data, isLoading } = useFETCH(
+  const { data, isLoading, reCallUrl } = useFETCH(
     `orders?local=${localStorage.getItem("language")}${
       filter.get("status") ? "&status=" + filter.get("status") : ""
     }${filter.get("page") ? "&page=" + filter.get("page") : ""}${
@@ -30,6 +33,37 @@ const Orders = () => {
         : ""
     }`
   );
+  
+
+  useEffect(() => {
+    const fetchDataInterval = setInterval(async () => {
+      try {
+        // Call your asynchronous function here
+        const data = await checkOrderStatus();
+        reCallUrl();
+        console.log('reCallUrl');
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }, 1 * 60 * 1000); // 5 minutes in milliseconds
+
+    // Clear the interval on component unmount to avoid memory leaks
+    return () => clearInterval(fetchDataInterval);
+  }, []); // Empty dependency array ensures useEffect runs only once
+
+
+
+  const renderCodes = (codes) =>{
+    console.log({ codes });
+    if(codes) {
+      codes = JSON.parse(codes)
+    }
+    console.log({ codes });
+    return codes.map((item, index) => (
+  
+     <CopyableText text={item?.code} />  
+    ));
+   }
   return (
     <section className="py-4">
       <Container>
@@ -93,6 +127,20 @@ const Orders = () => {
                         <p className="text-Purple">
                           {e.accept_note ? e.accept_note : ""}
                         </p>
+                        {e?.item_codes && (
+                     
+                     <div className="flex gap-2 mb-2 text-center">
+                      
+                       <div
+                    
+                         className={`font-semibold`}
+                       >
+                        { renderCodes(e?.item_codes)}
+                       </div>
+                       
+                     </div>
+                   
+                    )}
                       </td>
                       <td className="max-md:hidden">{e.date || "__"}</td>
                       <td className="max-md:hidden">{e.time || "__"}</td>

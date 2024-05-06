@@ -10,6 +10,9 @@ import {
   Home,
   Products,
   ProductsFive,
+  ApiProducts,
+  ApiProductsPackage,
+  
   ProductsFour,
   ProductsOne,
   ProductsThree,
@@ -106,6 +109,10 @@ const App = () => {
               <Route path="products-3/:id" element={<ProductsThree />} />
               <Route path="products-4/:id" element={<ProductsFour />} />
               <Route path="products-5/:id" element={<ProductsFive />} />
+              <Route path="products-6/:id" element={<ApiProducts />} />
+              <Route path="products-6/packages/:id" element={<ApiProductsPackage />} />
+
+
             </Route>
           </Route>
           <Route path="Contact-us" element={<Contact />} />

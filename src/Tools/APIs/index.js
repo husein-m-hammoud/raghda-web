@@ -7,10 +7,10 @@ import {
   Outlet,
 } from "react-router-dom";
 import { useContextTranslate } from "../../Context/ContextAPI";
-// export const baseUrl = "https://dev-backend.raghdacell.com/api/";
-// export const fileUrl = "https://dev-backend.raghdacell.com/storage/";
-export const baseUrl = "https://backend.raghdacell.com/api/";
-export const fileUrl = "https://backend.raghdacell.com/storage/";
+ export const baseUrl = "https://dev-backend.raghdacell.com/api/";
+ export const fileUrl = "https://dev-backend.raghdacell.com/storage/";
+// export const baseUrl = "https://backend.raghdacell.com/api/";
+//export const fileUrl = "https://backend.raghdacell.com/storage/";
 //!=============================================================> post data login
 export const useLOGIN = (initialState) => {
   const [formData, setFormData] = useState(initialState); // data
@@ -236,11 +236,13 @@ export const useFETCH = (url, urlDelete) => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isErroe, setIsError] = useState("");
+  const [prevUrl, setPrevUrl] = useState("");
 
   const naviget = useNavigate();
   useEffect(() => {
     setIsLoading(true);
-    if (url) {
+    if (url) { 
+      setPrevUrl(url);
       axios
         .get(`${baseUrl}${url}`, {
           headers: {
@@ -265,8 +267,40 @@ export const useFETCH = (url, urlDelete) => {
             naviget("/403");
           }
         });
+
     }
   }, [url]);
+
+  const reCallUrl = async (e) => {
+    if (prevUrl) { 
+     
+      axios
+        .get(`${baseUrl}${prevUrl}`, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        })
+        .then((req) => {
+          if (req) {
+            setData(req);
+            setIsLoading(false);
+            setIsError("");
+          }
+        })
+        .catch((e) => {
+          setIsLoading(false);
+          setIsError("خطأ في جلب البيانات");
+
+          if (e.request.status === 401) {
+            localStorage.removeItem("token");
+          }
+          if (e.request.status === 403) {
+            naviget("/403");
+          }
+        });
+
+    }
+  }
 
   //?=============================================================> deleteItem
   const deleteItem = async (e) => {
@@ -287,7 +321,7 @@ export const useFETCH = (url, urlDelete) => {
         setIsError(" خطأ في الحذف  حاول مرة آخرى");
       });
   };
-  return { data, isLoading, isErroe, deleteItem };
+  return { data, isLoading, isErroe, deleteItem, reCallUrl };
 };
 //=============================================================> end fetch data
 
@@ -352,4 +386,15 @@ export const Enter = (fun) => {
       fun();
     }
   };
+};
+
+export const checkOrderStatus = () => {
+  var url  = 'automated/get/status/bulk';
+  axios
+  .get(`${baseUrl}${url}`, {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  })
+
 };
