@@ -52,7 +52,6 @@ const Orders = () => {
   }, []); // Empty dependency array ensures useEffect runs only once
 
 
-
   const renderCodes = (codes) =>{
     console.log({ codes });
     if(codes) {

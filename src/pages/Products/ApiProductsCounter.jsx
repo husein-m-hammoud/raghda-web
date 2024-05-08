@@ -79,6 +79,14 @@ console.log({dataAll});
       );
       return;
     }
+    if ( dataAll?.maximum_qut >0 && formData.qty > dataAll?.maximum_qut) {
+      setError(
+        localStorage.getItem("language") === "en"
+          ? "Quantity must be less than or equal to " + dataAll?.maximum_qut
+          : `يجب أن تكون الكمية أقل أو تساوي ${dataAll?.maximum_qut}`
+      );
+      return;
+    }
     if ((dataAll?.th_party_api_id || dataAll?.th_party_as7ab_api) && dataAll?.require_player_number != 1) {
       console.log("Please", dataAll?.require_player_number, dataAll?.th_party_api_id, dataAll?.th_party_as7ab_api)
       if (

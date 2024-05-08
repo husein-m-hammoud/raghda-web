@@ -22,6 +22,7 @@ const ApiProductsPackage = () => {
 
   const dataAll = data?.data.data;
   console.log({ dataAll });
+  
   const calculatePrice = (price = null, percentage = null) => {
     console.log(price, percentage, "percentage");
     if (percentage <= 0 || percentage == undefined) {
@@ -48,11 +49,36 @@ const ApiProductsPackage = () => {
   } = usePOST({});
   const handleSubmitMain = (e) => {
     e.preventDefault();
+    if (dataAll?.product_reference == 184798 && formData.qty > 3) {
+      setError(
+        localStorage.getItem("language") === "en"
+          ? "Quantity must be less than or equal to  3"
+          : `يجب أن تكون الكمية أقل أو تساوي 3`
+      );
+      return;
+    }
+    if (dataAll?.automation_reference == 2 && formData.qty > 1) {
+      setError(
+        localStorage.getItem("language") === "en"
+          ? "Quantity must be equal to  1"
+          : `يجب أن تكون الكمية  تساوي 1`
+      );
+      return;
+    }
+   
     if (formData.qty < dataAll?.minimum_qut) {
       setError(
         localStorage.getItem("language") === "en"
           ? "Quantity must be greater than or equal to " + dataAll?.minimum_qut
           : `يجب أن تكون الكمية أكبر أو تساوي ${dataAll?.minimum_qut}`
+      );
+      return;
+    }
+    if ( dataAll?.maximum_qut >0 && formData.qty > dataAll?.maximum_qut) {
+      setError(
+        localStorage.getItem("language") === "en"
+          ? "Quantity must be less than or equal to " + dataAll?.maximum_qut
+          : `يجب أن تكون الكمية أقل أو تساوي ${dataAll?.maximum_qut}`
       );
       return;
     }
@@ -114,9 +140,11 @@ const ApiProductsPackage = () => {
                     name="qty"
                     type="number"
                     value={formData.qty}
+                   
                     onChange={handleChangeInput}
                     placeholder={dataAll?.minimum_qut || "1234..."}
                     className="py-5 px-4 border mt-3 border-[#707070] rounded-xl w-full outline-none"
+                    //readOnly={dataAll?.automation_reference == 2 ? "true" : "false"}
                   />
                 </p>
               </div>

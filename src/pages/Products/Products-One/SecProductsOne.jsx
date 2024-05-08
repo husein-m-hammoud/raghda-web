@@ -4,7 +4,7 @@ import { Col, Row } from "../../../Grid-system";
 import { useParams } from "react-router-dom";
 import { fileUrl, useFETCH, useFilter } from "../../../Tools/APIs";
 
-const SecProductsOne = ({number = 1}) => {
+const SecProductsOne = ({ number = 1 }) => {
   const { content, profile } = useContextTranslate();
   const { id } = useParams();
   const { filter } = useFilter();
@@ -13,6 +13,17 @@ const SecProductsOne = ({number = 1}) => {
       filter.get("page") ? "&page=" + filter.get("page") : ""
     }`
   );
+
+  const calculatePrice = (price = null, percentage = null) => {
+    console.log(price, percentage, "percentage");
+    if (percentage <= 0 || percentage == undefined) {
+      return price;
+    }
+    const newPrice = price * (1 + percentage / 100);
+    console.log(newPrice, "percentage");
+
+    return newPrice;
+  };
   return (
     <div className="py-3">
       <div>
@@ -60,7 +71,13 @@ const SecProductsOne = ({number = 1}) => {
                   active={e.is_available ? `` : `${content.unAvailable}`}
                   bg={e.is_available ? `` : `bg-black/10`}
                   price={
-                    profile?.type === "COMPANY" ? e.company_price : e.user_price
+                    number == 6
+                      ? profile?.type === "COMPANY"
+                        ? calculatePrice(e.company_price, e.company_percentage)
+                        : calculatePrice(e.user_price, e.user_percentage)
+                      : profile?.type === "COMPANY"
+                      ? e.company_price
+                      : e.user_price
                   }
                 />
               </Col>

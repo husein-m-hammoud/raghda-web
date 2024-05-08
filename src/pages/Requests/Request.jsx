@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { Currency, Loading, TitleTwo, CopyableText } from "../../components";
 import { useContextTranslate } from "../../Context/ContextAPI";
 import { Col, Container, Row } from "../../Grid-system";
-import { fileUrl, useFETCH } from "../../Tools/APIs";
+import { fileUrl, useFETCH , checkOrderStatus} from "../../Tools/APIs";
 import { useEffect, useRef, useState } from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaRegCopy } from "react-icons/fa";
@@ -35,6 +35,21 @@ const renderCodes = () =>{
    
   ));
  }
+ useEffect(() => {
+  const fetchDataInterval = setInterval(async () => {
+    try {
+      // Call your asynchronous function here
+      const data = await checkOrderStatus();
+      reCallUrl();
+      console.log('reCallUrl');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }, 1 * 60 * 1000); // 5 minutes in milliseconds
+
+  // Clear the interval on component unmount to avoid memory leaks
+  return () => clearInterval(fetchDataInterval);
+}, []); // Empty dependency array ensures useEffect runs only once
 
 
   return (
