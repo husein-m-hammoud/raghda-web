@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Currency, Loading, TitleTwo, CopyableText } from "../../components";
+import { Currency, Loading, TitleTwo, CopyableText , Back} from "../../components";
 import { useContextTranslate } from "../../Context/ContextAPI";
 import { Col, Container, Row } from "../../Grid-system";
 import { fileUrl, useFETCH , checkOrderStatus} from "../../Tools/APIs";
@@ -307,7 +307,7 @@ const renderCodes = () =>{
                         <div>{dataAll?.product_name}</div>
                       </div>
                     </Col>
-                    {dataAll?.package_name && (
+                    {dataAll?.package_name && dataAll?.product_name !== dataAll?.package_name &&  (
                       <Col>
                         <div className="flex gap-2 mb-2">
                           <div className="font-semibold text-Pink">
@@ -342,8 +342,10 @@ const renderCodes = () =>{
                 </Row>
               </Col>
             </Row>
+           
           </Col>
         </Row>
+        <Back />
       </Container>
     </section>
   );

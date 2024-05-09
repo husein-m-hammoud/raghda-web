@@ -6,7 +6,8 @@ const Currency = ({ number, currency }) => {
   return (
     <span>
       {profile?.currency === "USD"
-        ? number?.toFixed(2)
+        ? number.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })
+
         : parseInt(number).toLocaleString() || 0}
       {" " + (currency || profile?.currency || "")}
     </span>

@@ -116,8 +116,9 @@ console.log({dataAll});
     if(percentage <= 0 || percentage == undefined) {
       return price;
     }
-    const newPrice = price * (1+ percentage / 100);
+    let newPrice = price * (1+ percentage / 100);
     console.log(newPrice,'percentage');
+    console.log(newPrice,'percentagtte22');
     return newPrice;
   };
 
