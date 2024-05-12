@@ -11,15 +11,18 @@ import {
 import { fileUrl, useFETCH, usePOST } from "../../Tools/APIs";
 import { useEffect, useState } from "react";
 
-const ApiProductsCounter = () => {
+const ApiProductsCounter = ({data, dataPackages}) => {
 
   const { content, showPopUp, setShowPopUp, profile } = useContextTranslate();
   const { id } = useParams();
   const [checkNumber, setCheckNumber] = useState("");
-  const { data, isLoading } = useFETCH(
-    `products/${id}?local=${localStorage.getItem("language")}`
-  );
-  const { data: dataPackages } = useFETCH(`products/${id}/packages`);
+  // const { data, isLoading } = useFETCH(
+  //   `products/${id}?local=${localStorage.getItem("language")}`
+  // );
+  // const { data: dataPackages, isLoading: isLoadingPack } = useFETCH(`products/${id}/packages`);
+  let language =localStorage.getItem("language");
+  const notShowInPopup = ['package_id', 'qty', 'product_id', 'product_reference'];
+
   let mergedData, package_id;
   let dataAll = data?.data.data;
   console.log(dataAll,'hus')
@@ -73,7 +76,7 @@ console.log({dataAll});
     e.preventDefault();
     if (formData.qty < dataAll?.minimum_qut) {
       setError(
-        localStorage.getItem("language") === "en"
+          language === "en"
           ? "Quantity must be greater than or equal to " + dataAll?.minimum_qut
           : `يجب أن تكون الكمية أكبر أو تساوي ${dataAll?.minimum_qut}`
       );
@@ -81,7 +84,7 @@ console.log({dataAll});
     }
     if ( dataAll?.maximum_qut >0 && formData.qty > dataAll?.maximum_qut) {
       setError(
-        localStorage.getItem("language") === "en"
+        language === "en"
           ? "Quantity must be less than or equal to " + dataAll?.maximum_qut
           : `يجب أن تكون الكمية أقل أو تساوي ${dataAll?.maximum_qut}`
       );
@@ -98,7 +101,7 @@ console.log({dataAll});
         );
       } else {
         setError(
-          localStorage.getItem("language") === "en"
+          language === "en"
             ? "The player number must be correct."
             : "يجب ان يكون رقم اللاعب صحيح"
         );
@@ -147,10 +150,16 @@ console.log({dataAll});
     }
   }, [dataPlayer?.data?.data?.username]);
 
+  // if(isLoading || isLoadingPack) {
+  //   return <Loading />;
+  // }
+
+
   return (
     <section className="py-3 font-semibold ">
+    
       <Container>
-        {isLoading ? <Loading /> : ""}
+        {/* {isLoading ? <Loading /> : ""} */}
     
         <div className="py-4 mt-4">
           <div className="flex justify-center gap-6 max-sm:flex-wrap">
@@ -180,8 +189,8 @@ console.log({dataAll});
                       } py-5 px-4 border mt-3  border-[#707070] rounded-xl w-full outline-none`}
                     />
                     <h5 className="text-red-600">
-                      {dataAll?.minimum_qut_note
-                        ? dataAll?.minimum_qut_note
+                      {dataAll?.minimum_qut
+                        ?  language === "en" ?  `minimum ${dataAll.minimum_qut}` : `الحد الادنى ${dataAll.minimum_qut} `
                         : ""}
                     </h5>
                   </p>
@@ -234,15 +243,15 @@ console.log({dataAll});
           showPopup={showPopUp}
           onClick={handleSubmitMain}
         >
-          <div className="w-full ">
+          <div className="w-full mb-2">
             <span>{content.Quantity}</span>
-            <p className="bg-[#D8D8D8] mt-3 py-5 px-4 border border-[#707070] rounded-xl">
+            <p className="bg-[#D8D8D8]  py-5 px-4 border border-[#707070] rounded-xl">
               {formData?.qty || 0}
             </p>
           </div>
-          <div className="w-full ">
+          <div className="w-full mb-2">
             <span>{content.Total}</span>
-            <p className="bg-[#D8D8D8] mt-3 py-5 px-4 border border-[#707070] rounded-xl">
+            <p className="bg-[#D8D8D8]  py-5 px-4 border border-[#707070] rounded-xl">
               <Currency
                 number={
                   formData?.qty *
@@ -253,32 +262,20 @@ console.log({dataAll});
               />
             </p>
           </div>
-          {dataAll?.require_player_number === 1 && (
-            <div className="w-full ">
-              <span>{content.PlayerNumber}</span>
-              <p className="bg-[#D8D8D8] mt-3 py-5 px-4 border border-[#707070] rounded-xl">
-                {formData?.player_number}
-              </p>
-            </div>
-          )}
-          {dataAll?.th_party_api_id && !dataAll?.require_player_number && (
-            <>
-              <div className="w-full ">
-                <span>{content.PlayerNumber}</span>
-                <p className="bg-[#D8D8D8] mt-3 py-5 px-4 border border-[#707070] rounded-xl">
-                  {formData?.player_number}
-                </p>
-              </div>
-              <div className="w-full ">
-                <span>{content.PlayerName}</span>
-                <p className="bg-[#D8D8D8] mt-3 py-5 px-4 border border-[#707070] rounded-xl">
-                  {dataPlayer?.data?.data?.username ||
-                    dataPlayer?.data.msg ||
-                    dataPlayer?.data?.message}
-                </p>
-              </div>
-            </>
-          )}
+          {formData && Object.entries(formData).map(([item, value]) => (
+                <>
+                {!notShowInPopup.includes(item) && (
+                  <div className="w-full mb-2 ">
+                  <span>{item}</span>
+                  <p className="bg-[#D8D8D8]  py-5 px-4 border border-[#707070] rounded-xl">
+                    {value}
+                  </p>
+                </div>
+                )
+                }
+                </>
+               
+              ))}
           <div className="text-red-500 font-semibold text-center">{error}</div>
         </PopUp>
       </Container>

@@ -6,7 +6,7 @@ import {
   Loading,
   PopUp,
   TitleTwo,
-  Requirements
+  Requirements,
 } from "../../components";
 import { fileUrl, useFETCH, usePOST } from "../../Tools/APIs";
 import { CiSearch } from "react-icons/ci";
@@ -19,20 +19,22 @@ const ApiProductsPackage = () => {
   const { data, isLoading } = useFETCH(
     `products/packages/${id}?local=${localStorage.getItem("language")}`
   );
+  let language =localStorage.getItem("language");
 
   const dataAll = data?.data.data;
   console.log({ dataAll });
-  
+
   const calculatePrice = (price = null, percentage = null) => {
     console.log(price, percentage, "percentage");
     if (percentage <= 0 || percentage == undefined) {
       return price;
     }
     const newPrice = price * (1 + percentage / 100);
-    console.log(newPrice,'percentage');
+    console.log(newPrice, "percentage");
 
     return newPrice;
   };
+  const notShowInPopup = ['package_id', 'qty', 'product_id', 'product_reference'];
   const {
     handleChangeInput,
     handleSubmit,
@@ -40,7 +42,7 @@ const ApiProductsPackage = () => {
     loading,
     error,
     setError,
-    setFormData
+    setFormData,
   } = usePOST({ package_id: id });
   const {
     handleSubmit: handleSubmitPlayer,
@@ -49,59 +51,58 @@ const ApiProductsPackage = () => {
   } = usePOST({});
   const handleSubmitMain = (e) => {
     e.preventDefault();
-    if (dataAll?.product_reference == 184798 && formData.qty > 3) {
-      setError(
-        localStorage.getItem("language") === "en"
-          ? "Quantity must be less than or equal to  3"
-          : `يجب أن تكون الكمية أقل أو تساوي 3`
-      );
-      return;
-    }
-    if (dataAll?.automation_reference == 2 && formData.qty > 1) {
-      setError(
-        localStorage.getItem("language") === "en"
-          ? "Quantity must be equal to  1"
-          : `يجب أن تكون الكمية  تساوي 1`
-      );
-      return;
-    }
-   
+    // if (dataAll?.product_reference == 184798 && formData.qty > 3) {
+    //   setError(
+    //       language === "en"
+    //       ? "Quantity must be less than or equal to  3"
+    //       : `يجب أن تكون الكمية أقل أو تساوي 3`
+    //   );
+    //   return;
+    // }
+    // if (dataAll?.automation_reference == 2 && formData.qty > 1) {
+    //   setError(
+    //       language === "en"
+    //       ? "Quantity must be equal to  1"
+    //       : `يجب أن تكون الكمية  تساوي 1`
+    //   );
+    //   return;
+    // }
+
     if (formData.qty < dataAll?.minimum_qut) {
       setError(
-        localStorage.getItem("language") === "en"
+          language === "en"
           ? "Quantity must be greater than or equal to " + dataAll?.minimum_qut
           : `يجب أن تكون الكمية أكبر أو تساوي ${dataAll?.minimum_qut}`
       );
       return;
     }
-    if ( dataAll?.maximum_qut >0 && formData.qty > dataAll?.maximum_qut) {
+    if (dataAll?.maximum_qut > 0 && formData.qty > dataAll?.maximum_qut) {
       setError(
-        localStorage.getItem("language") === "en"
+          language === "en"
           ? "Quantity must be less than or equal to " + dataAll?.maximum_qut
           : `يجب أن تكون الكمية أقل أو تساوي ${dataAll?.maximum_qut}`
       );
       return;
     }
-    if ((dataAll?.th_party_api_id || dataAll?.th_party_as7ab_api) && dataAll?.require_player_number != 1) {
+    
+    if (
+      (dataAll?.th_party_api_id || dataAll?.th_party_as7ab_api) &&
+      dataAll?.require_player_number != 1
+    ) {
       if (
         dataPlayer?.data?.data?.username &&
         formData?.player_number === checkNumber
       ) {
-        handleSubmit(
-          `automated/get/packages`
-        );
+        handleSubmit(`automated/get/packages`);
       } else {
         setError(
-          localStorage.getItem("language") === "en"
+            language === "en"
             ? "The player number must be correct."
             : "يجب ان يكون رقم اللاعب صحيح"
         );
       }
-    }  
-     else {
-      handleSubmit(
-        `automated/get/packages`
-      );
+    } else {
+      handleSubmit(`automated/get/packages`);
     }
   };
   useEffect(() => {
@@ -114,10 +115,13 @@ const ApiProductsPackage = () => {
       ...formData,
       qty: dataAll?.minimum_qut,
       product_id: dataAll?.id,
-      product_reference: dataAll?.product_reference
+      product_reference: dataAll?.product_reference,
     });
   }, [dataAll]);
-
+  
+  if (isLoading) {
+    <Loading />;
+  }
   return (
     <div className="py-4 mt-4 font-semibold">
       {isLoading ? <Loading /> : ""}
@@ -140,12 +144,16 @@ const ApiProductsPackage = () => {
                     name="qty"
                     type="number"
                     value={formData.qty}
-                   
                     onChange={handleChangeInput}
                     placeholder={dataAll?.minimum_qut || "1234..."}
                     className="py-5 px-4 border mt-3 border-[#707070] rounded-xl w-full outline-none"
                     //readOnly={dataAll?.automation_reference == 2 ? "true" : "false"}
                   />
+                   <h5 className="text-red-600">
+                      {dataAll?.minimum_qut
+                        ?  language === "en" ?  `minimum ${dataAll.minimum_qut}` : `الحد الادنى ${dataAll.minimum_qut} `
+                        : ""}
+                    </h5>
                 </p>
               </div>
               <div className="w-full ">
@@ -236,15 +244,15 @@ const ApiProductsPackage = () => {
               showPopup={showPopUp}
               onClick={handleSubmitMain}
             >
-              <div className="w-full ">
+              <div className="w-full mb-2">
                 <span>{content.Quantity}</span>
-                <p className="bg-[#D8D8D8] mt-3 py-5 px-4 border border-[#707070] rounded-xl">
+                <p className="bg-[#D8D8D8]  py-5 px-4 border border-[#707070] rounded-xl">
                   {formData?.qty || 0}
                 </p>
               </div>
-              <div className="w-full ">
+              <div className="w-full mb-2">
                 <span>{content.Total}</span>
-                <p className="bg-[#D8D8D8] mt-3  py-5 px-4 border border-[#707070] rounded-xl  ">
+                <p className="bg-[#D8D8D8]   py-5 px-4 border border-[#707070] rounded-xl  ">
                   <Currency
                     number={
                       formData?.qty *
@@ -262,32 +270,21 @@ const ApiProductsPackage = () => {
                 </p>
               </div>
 
-              {dataAll?.require_player_number === 1 && (
-                <div className="w-full ">
-                  <span>{content.PlayerNumber}</span>
-                  <p className="bg-[#D8D8D8] mt-3 py-5 px-4 border border-[#707070] rounded-xl">
-                    {formData?.player_number}
+         
+              {formData && Object.entries(formData).map(([item, value]) => (
+                <>
+                {!notShowInPopup.includes(item) && (
+                  <div className="w-full mb-2 ">
+                  <span>{item}</span>
+                  <p className="bg-[#D8D8D8]  py-5 px-4 border border-[#707070] rounded-xl">
+                    {value}
                   </p>
                 </div>
-              )}
-              {dataAll?.th_party_api_id && !dataAll?.require_player_number && (
-                <>
-                  <div className="w-full ">
-                    <span>{content.PlayerNumber}</span>
-                    <p className="bg-[#D8D8D8] mt-3 py-5 px-4 border border-[#707070] rounded-xl">
-                      {formData?.player_number}
-                    </p>
-                  </div>
-                  <div className="w-full ">
-                    <span>{content.PlayerName}</span>
-                    <p className="bg-[#D8D8D8] mt-3 py-5 px-4 border border-[#707070] rounded-xl">
-                      {dataPlayer?.data?.data?.username ||
-                        dataPlayer?.data.msg ||
-                        dataPlayer?.data?.message}
-                    </p>
-                  </div>
+                )
+                }
                 </>
-              )}
+               
+              ))}
               <div className="text-red-500 font-semibold text-center">
                 {error}
               </div>

@@ -1,4 +1,4 @@
-import { Container, TitleTwo } from "../../components";
+import { Container, TitleTwo, Loading } from "../../components";
 import SecProductsOne from "./Products-One/SecProductsOne";
 import ApiProductsCounter from "./ApiProductsCounter";
 import React, { useState } from "react";
@@ -7,14 +7,16 @@ import { useContextTranslate } from "../../Context/ContextAPI";
 import { useFETCH } from "../../Tools/APIs";
 import { useParams } from "react-router-dom";
 
+
 const ApiProducts = () => {
   const [isCounter, setIsCounter] = useState(false);
 
   const { id } = useParams();
-  const { data } = useFETCH(
+   const { data, isLoading } = useFETCH(
     `products/${id}?local=${localStorage.getItem("language")}`
   );
-  const { data: dataPackages } = useFETCH(`products/${id}/packages`);
+
+  const { data: dataPackages, isLoading:isLoadingPack } = useFETCH(`products/${id}/packages`);
 
   if (
     dataPackages?.data?.data.length == 1 &&
@@ -25,15 +27,21 @@ const ApiProducts = () => {
     }
   }
   console.log('hussein', isCounter, dataPackages);
-
+  if(isLoading || isLoadingPack) {
+    return <Loading />;
+  }
 
   return (
     <section className="py-3 ">
+       <TitleTwo title={data?.data.data.name} />
       <Container>
-        <TitleTwo title={data?.data.data.name} />
+       
         {
           isCounter? (
-                      <ApiProductsCounter />
+                      <ApiProductsCounter 
+                        data={data}
+                        dataPackages={dataPackages}
+                      />
                     ) : (
                       <SecProductsOne number={6}/>
                     )

@@ -21,6 +21,13 @@ const Requirements = ({
           });
    
     }
+    if(formData?.playerId){
+      setFormData({
+          ...formData,
+          player_number: formData.playerId
+        });
+ 
+  }
     console.log({formData})
   },[formData?.player_id])
   
@@ -44,7 +51,7 @@ const Requirements = ({
           value={formData[item?.name]}
           onChange={handleChangeInput}
           className="w-full py-5 px-4  outline-none border border-[#707070] mt-3  rounded-xl"
-          placeholder={content.EnterThePlayerNumber}
+          placeholder={item?.name == 'player_id' ? content.EnterThePlayerNumber : `Enter the ${item?.label} `}
         />
       </div>
     ));

@@ -1,4 +1,4 @@
-import { CardProducts, LoadingProducts, Title } from "../../../components";
+import { CardProducts, LoadingProducts, Title, TitleTwo } from "../../../components";
 import { useContextTranslate } from "../../../Context/ContextAPI";
 import { Col, Row } from "../../../Grid-system";
 import { useParams } from "react-router-dom";
@@ -26,6 +26,7 @@ const SecProductsOne = ({ number = 1 }) => {
   };
   return (
     <div className="py-3">
+     
       <div>
         <Title title={content.Packages} />
         <div className="text-xl mb-4">{content.Choosetherightpackage}:</div>
