@@ -16,6 +16,8 @@ const ApiProductsCounter = ({data, dataPackages}) => {
   const { content, showPopUp, setShowPopUp, profile } = useContextTranslate();
   const { id } = useParams();
   const [checkNumber, setCheckNumber] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
   // const { data, isLoading } = useFETCH(
   //   `products/${id}?local=${localStorage.getItem("language")}`
   // );
@@ -96,9 +98,11 @@ console.log({dataAll});
         dataPlayer?.data?.data?.username &&
         formData?.player_number === checkNumber
       ) {
+        setIsLoading(true);
         handleSubmit(
           `automated/get/packages`
         );
+        setIsLoading(false);
       } else {
         setError(
           language === "en"
@@ -109,9 +113,11 @@ console.log({dataAll});
     }  
   
      else {
+      setIsLoading(true);
       handleSubmit(
         `automated/get/packages`
       );
+      setIsLoading(false);
     }
   };
   const calculatePrice = (price = null, percentage =null ) => {
@@ -159,7 +165,7 @@ console.log({dataAll});
     <section className="py-3 font-semibold ">
     
       <Container>
-        {/* {isLoading ? <Loading /> : ""} */}
+        {isLoading ? <Loading /> : ""}
     
         <div className="py-4 mt-4">
           <div className="flex justify-center gap-6 max-sm:flex-wrap">
@@ -266,7 +272,7 @@ console.log({dataAll});
                 <>
                 {!notShowInPopup.includes(item) && (
                   <div className="w-full mb-2 ">
-                  <span>{item}</span>
+                  <span className="capitalize">{item}</span>
                   <p className="bg-[#D8D8D8]  py-5 px-4 border border-[#707070] rounded-xl">
                     {value}
                   </p>

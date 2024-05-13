@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 const ApiProductsPackage = () => {
   const { content, showPopUp, setShowPopUp, profile } = useContextTranslate();
   const { id } = useParams();
+  const [isLoad, setIsLoad] = useState(false);
+
   const [checkNumber, setCheckNumber] = useState("");
   const { data, isLoading } = useFETCH(
     `products/packages/${id}?local=${localStorage.getItem("language")}`
@@ -93,7 +95,9 @@ const ApiProductsPackage = () => {
         dataPlayer?.data?.data?.username &&
         formData?.player_number === checkNumber
       ) {
+        setIsLoad(true);
         handleSubmit(`automated/get/packages`);
+        setIsLoad(false);
       } else {
         setError(
             language === "en"
@@ -102,7 +106,9 @@ const ApiProductsPackage = () => {
         );
       }
     } else {
+      setIsLoad(true);
       handleSubmit(`automated/get/packages`);
+      setIsLoad(false);
     }
   };
   useEffect(() => {
@@ -125,6 +131,7 @@ const ApiProductsPackage = () => {
   return (
     <div className="py-4 mt-4 font-semibold">
       {isLoading ? <Loading /> : ""}
+      {isLoad ? <Loading /> : ""}
       <TitleTwo title={dataAll?.name} />
       <Container>
         <div className="flex justify-center gap-6 max-sm:flex-wrap">
@@ -275,7 +282,7 @@ const ApiProductsPackage = () => {
                 <>
                 {!notShowInPopup.includes(item) && (
                   <div className="w-full mb-2 ">
-                  <span>{item}</span>
+                  <span className="capitalize">{item}</span>
                   <p className="bg-[#D8D8D8]  py-5 px-4 border border-[#707070] rounded-xl">
                     {value}
                   </p>
