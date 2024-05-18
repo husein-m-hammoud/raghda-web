@@ -233,10 +233,12 @@ const renderCodes = () =>{
                               ? "text-green-600"
                               : dataAll?.status === "CANCELED"
                               ? "text-red-600 "
+                              : dataAll?.status === "FAILED"
+                              ? "text-blue-500"
                               : ""
                           } font-semibold`}
                         >
-                          {dataAll?.status}
+                          {dataAll?.status == "FAILED"  ? 'WAITING' : dataAll?.status }
                         </div>
                       </div>
                     </Col>

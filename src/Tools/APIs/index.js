@@ -272,10 +272,10 @@ export const useFETCH = (url, urlDelete) => {
   }, [url]);
 
   const reCallUrl = async (e) => {
-    if (prevUrl) { 
+    if (url) { 
      
       axios
-        .get(`${baseUrl}${prevUrl}`, {
+        .get(`${baseUrl}${url}`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -321,7 +321,7 @@ export const useFETCH = (url, urlDelete) => {
         setIsError(" خطأ في الحذف  حاول مرة آخرى");
       });
   };
-  return { data, isLoading, isErroe, deleteItem, reCallUrl };
+  return { data, isLoading, isErroe, deleteItem,prevUrl, reCallUrl };
 };
 //=============================================================> end fetch data
 

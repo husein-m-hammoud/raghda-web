@@ -36,7 +36,8 @@ const ApiProductsPackage = () => {
 
     return newPrice;
   };
-  const notShowInPopup = ['package_id', 'qty', 'product_id', 'product_reference'];
+  const notShowInPopup = ['package_id', 'qty', 'product_id', 'product_reference', 'player_number'];
+
   const {
     handleChangeInput,
     handleSubmit,
@@ -114,6 +115,10 @@ const ApiProductsPackage = () => {
   useEffect(() => {
     if (dataPlayer?.data?.data?.username) {
       setCheckNumber(formData?.player_number);
+      setFormData({
+        ...formData,
+        player_name: dataPlayer?.data?.data?.username
+      });
     }
   }, [dataPlayer?.data?.data?.username]);
   useEffect(() => {
@@ -128,6 +133,46 @@ const ApiProductsPackage = () => {
   if (isLoading) {
     <Loading />;
   }
+
+  const handleChangeQty = (e) => {
+
+    const { name, value } = e.target;
+    if(dataAll?.maximum_qut != null && dataAll?.maximum_qut > 0) {
+      console.log(value,  dataAll?.maximum_qut);
+
+      if(value > dataAll?.maximum_qut) {
+        setFormData({
+         ...formData,
+          qty: dataAll?.maximum_qut
+        });
+        return;
+      }
+      
+    }
+    if(value < 1) {
+      setFormData({
+       ...formData,
+        qty: dataAll?.minimum_qut
+      });
+      return;
+    }
+    handleChangeInput(e);
+    
+   
+  };
+  function convertLabel(input) {
+    // Replace underscore with a space
+    let result = input.replace("_", " ");
+
+    // Capitalize the first letter of each word
+    result = result
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+    return result;
+  }
+
   return (
     <div className="py-4 mt-4 font-semibold">
       {isLoading ? <Loading /> : ""}
@@ -151,7 +196,7 @@ const ApiProductsPackage = () => {
                     name="qty"
                     type="number"
                     value={formData.qty}
-                    onChange={handleChangeInput}
+                    onChange={handleChangeQty}
                     placeholder={dataAll?.minimum_qut || "1234..."}
                     className="py-5 px-4 border mt-3 border-[#707070] rounded-xl w-full outline-none"
                     //readOnly={dataAll?.automation_reference == 2 ? "true" : "false"}
@@ -282,7 +327,7 @@ const ApiProductsPackage = () => {
                 <>
                 {!notShowInPopup.includes(item) && (
                   <div className="w-full mb-2 ">
-                  <span className="capitalize">{item}</span>
+                  <span className="capitalize">{convertLabel(item)}</span>
                   <p className="bg-[#D8D8D8]  py-5 px-4 border border-[#707070] rounded-xl">
                     {value}
                   </p>

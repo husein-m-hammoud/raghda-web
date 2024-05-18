@@ -18,7 +18,7 @@ import React, { useEffect } from "react";
 const Orders = () => {
   const { content } = useContextTranslate();
   const { filter } = useFilter({});
-  const { data, isLoading, reCallUrl } = useFETCH(
+  const { data, isLoading, prevUrl, reCallUrl } = useFETCH(
     `orders?local=${localStorage.getItem("language")}${
       filter.get("status") ? "&status=" + filter.get("status") : ""
     }${filter.get("page") ? "&page=" + filter.get("page") : ""}${
@@ -40,8 +40,11 @@ const Orders = () => {
       try {
         // Call your asynchronous function here
         const data = await checkOrderStatus();
-        reCallUrl();
-        console.log('reCallUrl');
+        if(prevUrl){
+          reCallUrl(prevUrl);
+          console.log('reCallUrl');
+        }
+       
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -113,6 +116,9 @@ const Orders = () => {
                       <td className=" font-semibold py-7">
                         {e.status === "WAITING" && (
                           <p className="text-blue-600">{e.status || "__"}</p>
+                        )}
+                         {e.status === "FAILED" && (
+                          <p className="text-blue-600">{'WAITING' }</p>
                         )}
                         {e.status === "COMPLETED" && (
                           <p className="text-green-600">{e.status || "__"}</p>
