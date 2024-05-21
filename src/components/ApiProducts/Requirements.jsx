@@ -19,21 +19,26 @@ const Requirements = ({
             ...formData,
             player_number: formData.player_id
           });
-   
+
     }
     if(formData?.playerId){
       setFormData({
           ...formData,
           player_number: formData.playerId
         });
- 
+    if(formData?.id){
+      setFormData({
+          ...formData,
+          player_number: formData.id
+        });
+
   }
     console.log({formData})
-  },[formData?.player_id])
-  
+  },[formData?.player_id, formData?.id, formData?.playerId])
+
   useEffect(() => {
     if(data?.requirements) {
-        setRequirementsData(JSON.parse(data.requirements))   
+        setRequirementsData(JSON.parse(data.requirements))
     }
   }, [data?.requirements]);
 
@@ -62,7 +67,7 @@ const Requirements = ({
     {renderRequirements()}
       {data?.th_party_api_id && !data?.require_player_number && !data?.th_party_as7ab_api  && (
         <>
-        
+
           <div className="flex flex-col">
             <div className="flex justify-between items-center">
               <span>{content.PlayerName}</span>
@@ -95,7 +100,7 @@ const Requirements = ({
       )}
       {!data?.require_player_number && data?.th_party_as7ab_api  &&(
         <>
-        
+
           <div className="flex flex-col">
             <div className="flex justify-between items-center">
               <span>{content.PlayerName}</span>
