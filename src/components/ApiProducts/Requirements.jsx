@@ -31,6 +31,7 @@ const Requirements = ({
           ...formData,
           player_number: formData.id
         });
+      }
 
   }
     console.log({formData})
