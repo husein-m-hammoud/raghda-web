@@ -14,6 +14,7 @@ const Requirements = ({
   const [requirementsData, setRequirementsData] = useState("");
 
   useEffect(() => {
+    console.log('enter', )
     if(formData?.player_id){
         setFormData({
             ...formData,
@@ -26,6 +27,7 @@ const Requirements = ({
           ...formData,
           player_number: formData.playerId
         });
+      }
     if(formData?.id){
       setFormData({
           ...formData,
@@ -33,7 +35,7 @@ const Requirements = ({
         });
       }
 
-  }
+  
     console.log({formData})
   },[formData?.player_id, formData?.id, formData?.playerId])
 
