@@ -7,13 +7,18 @@ import {
   PopUp,
   Requirements,
   TitleTwo,
+  UnavvailablePopup
 } from "../../components";
+import { NavLink } from "react-router-dom";
+
 import { fileUrl, useFETCH, usePOST } from "../../Tools/APIs";
 import { useEffect, useState } from "react";
 
 const ApiProductsCounter = ({ data, dataPackages }) => {
   const { content, showPopUp, setShowPopUp, profile } = useContextTranslate();
   const { id } = useParams();
+  const [showUnavailablePopup, setShowUnavailablePopup] = useState(false);
+
   const [checkNumber, setCheckNumber] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +31,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
     "package_id",
     "qty",
     "product_id",
+    "player_number",
     "product_reference",
   ];
 
@@ -37,17 +43,13 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
     dataPackages?.data?.data[0].type !== "package"
   ) {
     mergedData = dataPackages?.data?.data[0];
+  
     package_id = mergedData?.id;
     mergedData["package_id"] = package_id;
     mergedData["images"] = dataAll?.images;
     mergedData["name"] = dataAll?.name;
 
-    mergedData["minimum_qut_note"] = dataAll?.minimum_qut_note
-      ? dataAll.minimum_qut_note
-      : "";
-
     mergedData["note"] = dataAll?.note ? dataAll?.note : "";
-    mergedData["minimum_qut"] = dataAll?.minimum_qut;
     console.log({ mergedData });
     dataAll = mergedData;
 
@@ -62,6 +64,14 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
     // }
   }
   console.log({ dataAll });
+
+  const handleGoBackAndReload = () => {
+    // Logic to go back one page and reload
+
+    window.history.go(-1);
+    //window.location.reload();
+  };
+
 
   const {
     handleChangeInput,
@@ -131,8 +141,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
       return price;
     }
     let newPrice = price * (1 + percentage / 100);
-    console.log(newPrice, "percentage");
-    console.log(newPrice, "percentagtte22");
+  
     return newPrice;
   };
 
@@ -145,15 +154,21 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
         player_name: dataPlayer?.data?.data?.username,
       });
     }
+
   }, [dataPlayer?.data?.data?.username]);
 
   useEffect(() => {
+    if(dataAll != null) {
+    setShowUnavailablePopup(dataAll?.is_available == 1 ? false : true);
+    }
+    
     setFormData({
       ...formData,
       qty: dataAll?.minimum_qut,
       product_id: dataAll?.package_id,
       product_reference: dataAll?.product_reference,
     });
+
   }, [dataAll]);
   function convertLabel(input) {
     // Replace underscore with a space
@@ -200,10 +215,18 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
     }
     handleChangeInput(e);
   };
+  if(showUnavailablePopup) {
+    return (
+      <UnavvailablePopup isOpen={true}  handleGoBackAndReload={handleGoBackAndReload}/>
+    )
+  }
+
   return (
     <section className="py-3 font-semibold ">
       <Container>
         {isLoading ? <Loading /> : ""}
+       
+
 
         <div className="py-4 mt-4">
           <div className="flex justify-center gap-6 max-sm:flex-wrap">

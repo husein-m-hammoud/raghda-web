@@ -7,6 +7,7 @@ import {
   PopUp,
   TitleTwo,
   Requirements,
+  UnavvailablePopup
 } from "../../components";
 import { fileUrl, useFETCH, usePOST } from "../../Tools/APIs";
 import { CiSearch } from "react-icons/ci";
@@ -16,6 +17,8 @@ const ApiProductsPackage = () => {
   const { content, showPopUp, setShowPopUp, profile } = useContextTranslate();
   const { id } = useParams();
   const [isLoad, setIsLoad] = useState(false);
+  const [showUnavailablePopup, setShowUnavailablePopup] = useState(false);
+
 
   const [checkNumber, setCheckNumber] = useState("");
   const { data, isLoading } = useFETCH(
@@ -122,6 +125,10 @@ const ApiProductsPackage = () => {
     }
   }, [dataPlayer?.data?.data?.username]);
   useEffect(() => {
+    if(dataAll != null) {
+      setShowUnavailablePopup(dataAll?.is_available == 1 ? false : true);
+      }
+      
     setFormData({
       ...formData,
       qty: dataAll?.minimum_qut,
@@ -132,6 +139,11 @@ const ApiProductsPackage = () => {
   
   if (isLoading) {
     <Loading />;
+  }
+  if(showUnavailablePopup) {
+    return (
+      <UnavvailablePopup isOpen={true}  handleGoBackAndReload={handleGoBackAndReload}/>
+    )
   }
 
   const handleChangeQty = (e) => {
