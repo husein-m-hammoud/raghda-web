@@ -135,6 +135,14 @@ const ApiProductsPackage = () => {
       product_id: dataAll?.id,
       product_reference: dataAll?.product_reference,
     });
+
+    const handleGoBackAndReload = () => {
+      // Logic to go back one page and reload
+  
+      window.history.go(-1);
+      //window.location.reload();
+    };
+  
   }, [dataAll]);
   
   if (isLoading) {
@@ -161,13 +169,13 @@ const ApiProductsPackage = () => {
       }
       
     }
-    if(value < 1) {
-      setFormData({
-       ...formData,
-        qty: dataAll?.minimum_qut
-      });
-      return;
-    }
+    // if(value < 1) {
+    //   setFormData({
+    //    ...formData,
+    //     qty: dataAll?.minimum_qut
+    //   });
+    //   return;
+    // }
     handleChangeInput(e);
     
    

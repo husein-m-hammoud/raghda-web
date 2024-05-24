@@ -52,7 +52,7 @@ const Orders = () => {
 
     // Clear the interval on component unmount to avoid memory leaks
     return () => clearInterval(fetchDataInterval);
-  }, []); // Empty dependency array ensures useEffect runs only once
+  }, [prevUrl]); // Empty dependency array ensures useEffect runs only once
 
 
   const renderCodes = (codes) =>{
@@ -132,14 +132,15 @@ const Orders = () => {
                         <p className="text-Purple">
                           {e.accept_note ? e.accept_note : ""}
                         </p>
-                        {e?.item_codes && (
+                        {e?.item_codes != null && (
                      
-                     <div className="flex gap-2 mb-2 text-center">
+                     <div className="flex gap-2 mb-2 text-center justify-center">
                       
                        <div
                     
                          className={`font-semibold`}
                        >
+                        
                         { renderCodes(e?.item_codes)}
                        </div>
                        

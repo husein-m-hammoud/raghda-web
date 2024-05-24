@@ -23,6 +23,7 @@ const Request = () => {
 
 const renderCodes = () =>{
   var codes = dataAll?.item_codes
+  
   console.log({ codes });
   if(codes) {
     codes = JSON.parse(codes)
@@ -242,7 +243,7 @@ const renderCodes = () =>{
                         </div>
                       </div>
                     </Col>
-                    {dataAll?.item_codes && (
+                    {dataAll?.item_codes != null && (
                      <Col>
                      <div className="flex gap-2 mb-2">
                        <div className="font-semibold text-Pink">

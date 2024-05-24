@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Footer, NavBar } from "./layout/index";
+import Swal from 'sweetalert2';
+
 import {
   AboutUs,
   ChargingWallet,
@@ -77,6 +79,39 @@ const App = () => {
     }
     requestPermission();
   }, []);
+
+
+  useEffect(() => {
+    const handleOnline = () => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Online',
+        text: 'You are online!',
+        timer: 2000,
+        timerProgressBar: true,
+
+      });
+    };
+
+    const handleOffline = () => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Offline',
+        text: 'You are offline!',
+        timer: 2000,
+        timerProgressBar: true,
+      });
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
 
   return (
     <div className="relative ov">

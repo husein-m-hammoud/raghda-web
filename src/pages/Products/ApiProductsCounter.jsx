@@ -33,6 +33,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
     "product_id",
     "player_number",
     "product_reference",
+    
   ];
 
   let mergedData, package_id;
@@ -206,13 +207,13 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
         return;
       }
     }
-    if (value < 1) {
-      setFormData({
-        ...formData,
-        qty: dataAll?.minimum_qut,
-      });
-      return;
-    }
+    // if (value < 1) {
+    //   setFormData({
+    //     ...formData,
+    //     qty: dataAll?.minimum_qut,
+    //   });
+    //   return;
+    // }
     handleChangeInput(e);
   };
   if(showUnavailablePopup) {
