@@ -126,8 +126,8 @@ const ApiProductsPackage = () => {
   }, [dataPlayer?.data?.data?.username]);
   useEffect(() => {
     if(dataAll != null) {
-      setShowUnavailablePopup(dataAll?.is_available == 1 ? false : true);
-      }
+      setShowUnavailablePopup(dataAll?.is_available == 0 || dataAll?.force_unavailable == 1  ? true : false);
+    }
       
     setFormData({
       ...formData,
@@ -136,15 +136,15 @@ const ApiProductsPackage = () => {
       product_reference: dataAll?.product_reference,
     });
 
-    const handleGoBackAndReload = () => {
-      // Logic to go back one page and reload
-  
-      window.history.go(-1);
-      //window.location.reload();
-    };
+
   
   }, [dataAll]);
-  
+  const handleGoBackAndReload = () => {
+    // Logic to go back one page and reload
+
+    window.history.go(-1);
+    //window.location.reload();
+  };
   if (isLoading) {
     <Loading />;
   }

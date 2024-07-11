@@ -160,7 +160,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
 
   useEffect(() => {
     if(dataAll != null) {
-    setShowUnavailablePopup(dataAll?.is_available == 1 ? false : true);
+    setShowUnavailablePopup(dataAll?.is_available == 0 || dataAll?.force_unavailable == 1  ? true : false);
     }
     
     setFormData({

@@ -132,7 +132,7 @@ const Orders = () => {
                         <p className="text-Purple">
                           {e.accept_note ? e.accept_note : ""}
                         </p>
-                        {e?.item_codes != null && (
+                        {e?.item_codes != null && e.status === "COMPLETED"  && (
                      
                      <div className="flex gap-2 mb-2 text-center justify-center">
                       

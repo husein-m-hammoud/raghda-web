@@ -59,14 +59,22 @@ const ContextProvider = ({ children }) => {
   );
   const profile = data?.data.data;
 
-  const [page, setPage] = useState(15);
-  const { data: dataProducts } = useFETCH(
+  const [page, setPage] = useState(1);
+  const [relod, setRelod] = useState(false);
+  const { data: dataProducts ,reCallUrl, prevUrl } = useFETCH(
     `products?local=${localStorage.getItem("language")}`
   );
-  
+  useEffect(()=> {
+    if(prevUrl) {
+      reCallUrl(prevUrl)
+      console.log('hussein2');
+    }
+    console.log('hussein1');
+  },[relod])
   const [products, setProducts] = useState([]);
   useEffect(() => {
     setProducts(dataProducts?.data.data.slice(0, page));
+    console.log('newss')
   }, [dataProducts?.data.data, page]);
   
   useEffect(() => {
@@ -93,6 +101,9 @@ if(profile?.locale&& profile?.locale?.toLowerCase()!=window.localStorage.getItem
         numberCode,
         setNumberCode,
         setTest,
+        relod,
+        setRelod,
+     
       }}
     >
       {children}

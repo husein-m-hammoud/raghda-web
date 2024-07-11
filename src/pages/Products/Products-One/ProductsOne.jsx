@@ -15,7 +15,7 @@ const ProductsOne = () => {
       <Container>
         <TitleTwo title={data?.data.data.name} />
         <SecProductsOne
-          number = '6'
+         
         />
       </Container>
     </section>

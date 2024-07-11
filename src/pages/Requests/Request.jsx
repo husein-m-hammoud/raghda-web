@@ -243,7 +243,7 @@ const renderCodes = () =>{
                         </div>
                       </div>
                     </Col>
-                    {dataAll?.item_codes != null && (
+                    {dataAll?.item_codes != null &&   dataAll.status === "COMPLETED" && (
                      <Col>
                      <div className="flex gap-2 mb-2">
                        <div className="font-semibold text-Pink">

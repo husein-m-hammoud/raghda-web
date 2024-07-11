@@ -1,4 +1,6 @@
 import InfiniteScroll from "react-infinite-scroll-component";
+import React, { useEffect, useState } from "react";
+
 import { useContextTranslate } from "../../Context/ContextAPI";
 import { Col, Row } from "../../Grid-system";
 import { fileUrl } from "../../Tools/APIs";
@@ -10,8 +12,13 @@ import {
 } from "../../components/index";
 
 const Products = () => {
-  const { content, page, setPage, dataProducts, products } =
+  const { content, page, setPage, dataProducts, products, relod, setRelod } =
     useContextTranslate();
+    useEffect(() => {
+      setRelod(!relod);
+      setPage(15)
+      }, []);
+    
   return (
     <section lassName="py-4 ">
       <Container>

@@ -16,7 +16,6 @@ const Home = () => {
 };
 
 export default Home;
-
 const MyComponent = () => {
   const { content, page, setDataproducts, setPage } = useContextTranslate();
   const [products, setProducts] = useState([]);
@@ -30,6 +29,8 @@ const MyComponent = () => {
       setDataproducts(false);
     }
   }, [data?.data.data.data]);
+
+
   return (
     <Container>
       <InfiniteScroll
