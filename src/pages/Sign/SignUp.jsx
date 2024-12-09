@@ -138,6 +138,7 @@ const SignUp = () => {
                   </di>
                   <PhoneInput
                     country={"lb"}
+                    alwaysDefaultMask
                     onChange={(phone) => {
                       setFormData((prevFormData) => ({
                         ...prevFormData,

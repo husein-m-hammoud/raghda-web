@@ -1,19 +1,20 @@
 {
   "files": {
     "main.css": "/static/css/main.13a2863c.css",
-    "main.js": "/static/js/main.288b437b.js",
+    "main.js": "/static/js/main.2cd563b3.js",
     "static/media/bg.png": "/static/media/bg.21d32809d4f1f8962353.png",
     "static/media/IMG-20230702-WA0052-removebg.png": "/static/media/IMG-20230702-WA0052-removebg.a58e6714dc2b6cb09bd2.png",
     "static/media/Flag-of-Lebanon-4-623x467.png": "/static/media/Flag-of-Lebanon-4-623x467.6a7a51dd371b31410d32.png",
     "static/media/pngwing.com (35).png": "/static/media/pngwing.com (35).2aea942a8043b40f1087.png",
     "static/media/istockphoto-1136155337-612x612.jpg": "/static/media/istockphoto-1136155337-612x612.8fe256208582734a0559.jpg",
+    "static/media/omt.webp": "/static/media/omt.f11888ce05e1b65a635f.webp",
     "static/media/tiktok.webp": "/static/media/tiktok.63b2da86b8f4f3403ad6.webp",
     "index.html": "/index.html",
     "main.13a2863c.css.map": "/static/css/main.13a2863c.css.map",
-    "main.288b437b.js.map": "/static/js/main.288b437b.js.map"
+    "main.2cd563b3.js.map": "/static/js/main.2cd563b3.js.map"
   },
   "entrypoints": [
     "static/css/main.13a2863c.css",
-    "static/js/main.288b437b.js"
+    "static/js/main.2cd563b3.js"
   ]
 }

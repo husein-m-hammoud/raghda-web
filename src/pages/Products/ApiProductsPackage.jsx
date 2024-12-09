@@ -7,7 +7,7 @@ import {
   PopUp,
   TitleTwo,
   Requirements,
-  UnavvailablePopup
+  UnavvailablePopup,
 } from "../../components";
 import { fileUrl, useFETCH, usePOST } from "../../Tools/APIs";
 import { CiSearch } from "react-icons/ci";
@@ -17,14 +17,15 @@ const ApiProductsPackage = () => {
   const { content, showPopUp, setShowPopUp, profile } = useContextTranslate();
   const { id } = useParams();
   const [isLoad, setIsLoad] = useState(false);
-  const [showUnavailablePopup, setShowUnavailablePopup] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
+  const [showUnavailablePopup, setShowUnavailablePopup] = useState(false);
 
   const [checkNumber, setCheckNumber] = useState("");
   const { data, isLoading } = useFETCH(
     `products/packages/${id}?local=${localStorage.getItem("language")}`
   );
-  let language =localStorage.getItem("language");
+  let language = localStorage.getItem("language");
 
   const dataAll = data?.data.data;
   console.log({ dataAll });
@@ -39,7 +40,13 @@ const ApiProductsPackage = () => {
 
     return newPrice;
   };
-  const notShowInPopup = ['package_id', 'qty', 'product_id', 'product_reference', 'player_number'];
+  const notShowInPopup = [
+    "package_id",
+    "qty",
+    "product_id",
+    "product_reference",
+    "player_number",
+  ];
 
   const {
     handleChangeInput,
@@ -57,6 +64,9 @@ const ApiProductsPackage = () => {
   } = usePOST({});
   const handleSubmitMain = (e) => {
     e.preventDefault();
+
+    var goToOrders = '/Orders';
+    
     // if (dataAll?.product_reference == 184798 && formData.qty > 3) {
     //   setError(
     //       language === "en"
@@ -76,7 +86,7 @@ const ApiProductsPackage = () => {
 
     if (formData.qty < dataAll?.minimum_qut) {
       setError(
-          language === "en"
+        language === "en"
           ? "Quantity must be greater than or equal to " + dataAll?.minimum_qut
           : `يجب أن تكون الكمية أكبر أو تساوي ${dataAll?.minimum_qut}`
       );
@@ -84,13 +94,13 @@ const ApiProductsPackage = () => {
     }
     if (dataAll?.maximum_qut > 0 && formData.qty > dataAll?.maximum_qut) {
       setError(
-          language === "en"
+        language === "en"
           ? "Quantity must be less than or equal to " + dataAll?.maximum_qut
           : `يجب أن تكون الكمية أقل أو تساوي ${dataAll?.maximum_qut}`
       );
       return;
     }
-    
+
     if (
       (dataAll?.th_party_api_id || dataAll?.th_party_as7ab_api) &&
       dataAll?.require_player_number != 1
@@ -100,18 +110,22 @@ const ApiProductsPackage = () => {
         formData?.player_number === checkNumber
       ) {
         setIsLoad(true);
-        handleSubmit(`automated/get/packages`);
+        setDisabled(true);
+        handleSubmit(`automated/get/packages`, goToOrders);
+        setDisabled(false);
         setIsLoad(false);
       } else {
         setError(
-            language === "en"
+          language === "en"
             ? "The player number must be correct."
             : "يجب ان يكون رقم اللاعب صحيح"
         );
       }
     } else {
       setIsLoad(true);
-      handleSubmit(`automated/get/packages`);
+      setDisabled(true);
+      handleSubmit(`automated/get/packages`, goToOrders);
+      setDisabled(false);
       setIsLoad(false);
     }
   };
@@ -120,24 +134,25 @@ const ApiProductsPackage = () => {
       setCheckNumber(formData?.player_number);
       setFormData({
         ...formData,
-        player_name: dataPlayer?.data?.data?.username
+        player_name: dataPlayer?.data?.data?.username,
       });
     }
   }, [dataPlayer?.data?.data?.username]);
   useEffect(() => {
-    if(dataAll != null) {
-      setShowUnavailablePopup(dataAll?.is_available == 0 || dataAll?.force_unavailable == 1  ? true : false);
+    if (dataAll != null) {
+      setShowUnavailablePopup(
+        dataAll?.is_available == 0 || dataAll?.force_unavailable == 1
+          ? true
+          : false
+      );
     }
-      
+
     setFormData({
       ...formData,
       qty: dataAll?.minimum_qut,
       product_id: dataAll?.id,
       product_reference: dataAll?.product_reference,
     });
-
-
-  
   }, [dataAll]);
   const handleGoBackAndReload = () => {
     // Logic to go back one page and reload
@@ -148,26 +163,27 @@ const ApiProductsPackage = () => {
   if (isLoading) {
     <Loading />;
   }
-  if(showUnavailablePopup) {
+  if (showUnavailablePopup) {
     return (
-      <UnavvailablePopup isOpen={true}  handleGoBackAndReload={handleGoBackAndReload}/>
-    )
+      <UnavvailablePopup
+        isOpen={true}
+        handleGoBackAndReload={handleGoBackAndReload}
+      />
+    );
   }
 
   const handleChangeQty = (e) => {
-
     const { name, value } = e.target;
-    if(dataAll?.maximum_qut != null && dataAll?.maximum_qut > 0) {
-      console.log(value,  dataAll?.maximum_qut);
+    if (dataAll?.maximum_qut != null && dataAll?.maximum_qut > 0) {
+      console.log(value, dataAll?.maximum_qut);
 
-      if(value > dataAll?.maximum_qut) {
+      if (value > dataAll?.maximum_qut) {
         setFormData({
-         ...formData,
-          qty: dataAll?.maximum_qut
+          ...formData,
+          qty: dataAll?.maximum_qut,
         });
         return;
       }
-      
     }
     // if(value < 1) {
     //   setFormData({
@@ -177,8 +193,6 @@ const ApiProductsPackage = () => {
     //   return;
     // }
     handleChangeInput(e);
-    
-   
   };
   function convertLabel(input) {
     // Replace underscore with a space
@@ -221,11 +235,13 @@ const ApiProductsPackage = () => {
                     className="py-5 px-4 border mt-3 border-[#707070] rounded-xl w-full outline-none"
                     //readOnly={dataAll?.automation_reference == 2 ? "true" : "false"}
                   />
-                   <h5 className="text-red-600">
-                      {dataAll?.minimum_qut
-                        ?  language === "en" ?  `minimum ${dataAll.minimum_qut}` : `الحد الادنى ${dataAll.minimum_qut} `
-                        : ""}
-                    </h5>
+                  <h5 className="text-red-600">
+                    {dataAll?.minimum_qut
+                      ? language === "en"
+                        ? `minimum ${dataAll.minimum_qut}`
+                        : `الحد الادنى ${dataAll.minimum_qut} `
+                      : ""}
+                  </h5>
                 </p>
               </div>
               <div className="w-full ">
@@ -315,6 +331,7 @@ const ApiProductsPackage = () => {
               loading={loading}
               showPopup={showPopUp}
               onClick={handleSubmitMain}
+              disabled={disabled}
             >
               <div className="w-full mb-2">
                 <span>{content.Quantity}</span>
@@ -342,21 +359,19 @@ const ApiProductsPackage = () => {
                 </p>
               </div>
 
-         
-              {formData && Object.entries(formData).map(([item, value]) => (
-                <>
-                {!notShowInPopup.includes(item) && (
-                  <div className="w-full mb-2 ">
-                  <span className="capitalize">{convertLabel(item)}</span>
-                  <p className="bg-[#D8D8D8]  py-5 px-4 border border-[#707070] rounded-xl">
-                    {value}
-                  </p>
-                </div>
-                )
-                }
-                </>
-               
-              ))}
+              {formData &&
+                Object.entries(formData).map(([item, value]) => (
+                  <>
+                    {!notShowInPopup.includes(item) && (
+                      <div className="w-full mb-2 ">
+                        <span className="capitalize">{convertLabel(item)}</span>
+                        <p className="bg-[#D8D8D8]  py-5 px-4 border border-[#707070] rounded-xl">
+                          {value}
+                        </p>
+                      </div>
+                    )}
+                  </>
+                ))}
               <div className="text-red-500 font-semibold text-center">
                 {error}
               </div>

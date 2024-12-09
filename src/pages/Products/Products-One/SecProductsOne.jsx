@@ -67,17 +67,12 @@ const SecProductsOne = ({ number = 1 }) => {
               e.merge_to ? (
                 <Col sm={7} xs={5} lg={3} key={e.id}>
                   <CardProducts
-                    className={`${
-                      e.available
-                        ? `hover:bg-Pink mb-2 hover:text-white hover:-translate-y-2`
-                        : ""
-                    }`}
-                    link={`${
+                    image={fileUrl + e.image}
+                    link={
                       e.available
                         ? `/products/products-${e.number}/${e.id}`
                         : ""
-                    }`}
-                    image={fileUrl + e.image}
+                    }
                     title={e.name}
                     active={e.available ? `` : `${content.unAvailable}`}
                     bg={e.available ? `` : `bg-black/10`}
@@ -89,14 +84,14 @@ const SecProductsOne = ({ number = 1 }) => {
                     image={fileUrl + e.image}
                     link={
                       e.is_available
-                        ? `/products/products-${number}/packages/${e.id}`
+                        ? `/products/products-${e.number}/packages/${e.id}`
                         : ""
                     }
                     title={e.name}
                     active={e.is_available ? `` : `${content.unAvailable}`}
                     bg={e.is_available ? `` : `bg-black/10`}
                     price={
-                      number == 6
+                      e.number == 6
                         ? profile?.type === "COMPANY"
                           ? calculatePrice(
                               e.company_price,

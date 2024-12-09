@@ -1,6 +1,8 @@
 import Money from "../../images/1200x630wa_clipdrop-background-removal.png";
 import USDT from "../../images/886865-middle_clipdrop-background-removal.png";
 import CODE from "../../images/istockphoto-1136155337-612x612.jpg";
+import omt from "../../images/omt.webp";
+
 import copy from "../../images/Icon feather-copy.png";
 import { Container, Currency, Loading, TitleTwo } from "../../components";
 import { useContextTranslate } from "../../Context/ContextAPI";
@@ -62,8 +64,8 @@ const ChargingWallet = () => {
             <Row justify="center" className=" gap-2 py-5 text-center  mb-10 ">
               {profile?.currency === "USD" ? (
                 <Col
-                  sm={4}
-                  md={4}
+                  sm={3}
+                  md={3}
                   onClick={() => {
                     if (active !== "USDT") {
                       setActive("USDT");
@@ -84,8 +86,8 @@ const ChargingWallet = () => {
               )}
 
               <Col
-                sm={4}
-                md={4}
+                sm={3}
+                md={3}
                 onClick={() => {
                   if (active !== "WHISH_MONEY") {
                     setActive("WHISH_MONEY");
@@ -101,6 +103,25 @@ const ChargingWallet = () => {
                 </div>
                 <h6 className="max-sm:text-[16px]">Whish Money</h6>
               </Col>
+
+              <Col
+                sm={3}
+                md={3}
+                onClick={() => {
+                  if (active !== "OMT_PAY") {
+                    setActive("OMT_PAY");
+                    setFormData("");
+                  }
+                }}
+                className={`${
+                  active === "OMT_PAY" ? "shadow-lg shadow-Pink" : ""
+                } border border-Purple p-1 flex flex-col justify-between cursor-pointer w-[150px]  rounded-2xl  font-semibold`}
+              >
+                <div className="w-[60px] mx-auto">
+                  <img src={omt} alt="" className="mx-auto" />
+                </div>
+                <h6 className="max-sm:text-[16px]">OMT Pay</h6>
+              </Col>
               <Col
                 onClick={() => {
                   if (active !== "PROMO_CODE") {
@@ -108,8 +129,8 @@ const ChargingWallet = () => {
                     setFormData("");
                   }
                 }}
-                sm={4}
-                md={4}
+                sm={3}
+                md={3}
                 className={`${
                   active === "PROMO_CODE" ? "shadow-lg shadow-Pink" : ""
                 } border border-Purple p-1 flex flex-col justify-between cursor-pointer w-[150px]  rounded-2xl  font-semibold`}
@@ -123,7 +144,11 @@ const ChargingWallet = () => {
             <div className={`space-y-5 `}>
               <div
                 className={`${
-                  active === "USDT" || active === "WHISH_MONEY" ? "" : "hidden"
+                  active === "USDT" ||
+                  active === "WHISH_MONEY" ||
+                  active === "OMT_PAY"
+                    ? ""
+                    : "hidden"
                 }`}
               >
                 <div className="bg-[#9A9A9A] text-white rounded-2xl py-5 px-8 flex justify-between items-center">
@@ -134,6 +159,8 @@ const ChargingWallet = () => {
                   >
                     {active === "USDT"
                       ? `${dataAll?.usdt_text || "Loading..."}`
+                      : active === "OMT_PAY"
+                      ? `${dataAll?.omt_pay_text || "Loading..."}`
                       : `${dataAll?.whish_money_text || "Loading..."}`}
                   </span>
                   {copys ? (
@@ -173,6 +200,8 @@ const ChargingWallet = () => {
                               formData?.value *
                                 ((active === "USDT"
                                   ? +dataAll?.usdt_tax_percentage
+                                  : active === "OMT_PAY"
+                                  ? +dataAll?.omt_pay_tax_percentage
                                   : +dataAll?.whish_money_tax_percentage) /
                                   100) || 0
                           }

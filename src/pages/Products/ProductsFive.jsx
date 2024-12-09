@@ -29,6 +29,8 @@ const ProductsFive = () => {
   } = usePOST({ product_id: id });
   const handleSubmitMain = (e) => {
     e.preventDefault();
+    var goToOrders = '/Orders';
+
     if (formData.quantity < dataAll?.minimum_qut) {
       setError(
         localStorage.getItem("language") === "en"
@@ -36,7 +38,7 @@ const ProductsFive = () => {
           : `يجب أن تكون الكمية أكبر أو تساوي ${dataAll?.minimum_qut}`
       );
     } else {
-      handleSubmit(`orders?local=${localStorage.getItem("language")}`);
+      handleSubmit(`orders?local=${localStorage.getItem("language")}`,goToOrders);
     }
   };
   useEffect(() => {

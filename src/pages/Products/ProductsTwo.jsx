@@ -34,6 +34,7 @@ const ProductsTwo = () => {
   } = usePOST({});
   const handleSubmitMain = (e) => {
     e.preventDefault();
+    var goToOrders = '/Orders';
     if (dataAll?.th_party_api_id) {
       if (
         dataPlayer?.data?.data?.username &&
@@ -41,7 +42,7 @@ const ProductsTwo = () => {
       ) {
         handleSubmit(
           `orders?local=${localStorage.getItem("language")}&player_name=` +
-            dataPlayer?.data?.data?.username
+            dataPlayer?.data?.data?.username,goToOrders
         );
       } else {
         setError(
@@ -57,7 +58,7 @@ const ProductsTwo = () => {
           : `يجب أن تكون الكمية أكبر أو تساوي ${dataAll?.minimum_qut}`
       );
     } else {
-      handleSubmit(`orders?local=${localStorage.getItem("language")}`);
+      handleSubmit(`orders?local=${localStorage.getItem("language")}`,goToOrders);
     }
   };
   useEffect(() => {

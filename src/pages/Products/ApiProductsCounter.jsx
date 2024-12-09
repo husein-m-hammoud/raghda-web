@@ -38,7 +38,8 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
 
   let mergedData, package_id;
   let dataAll = data?.data.data;
-  console.log(dataAll, "hus");
+  console.log(dataAll, "dataAll");
+  console.log(dataPackages, "dataPackages");
   if (
     dataPackages?.data?.data.length == 1 &&
     dataPackages?.data?.data[0].type !== "package"
@@ -90,6 +91,8 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
   } = usePOST({});
   const handleSubmitMain = (e) => {
     e.preventDefault();
+    var goToOrders = '/Orders';
+    
     if (formData.qty < dataAll?.minimum_qut) {
       setError(
         language === "en"
@@ -121,7 +124,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
         formData?.player_number === checkNumber
       ) {
         setIsLoading(true);
-        handleSubmit(`automated/get/packages`);
+        handleSubmit(`automated/get/packages` , goToOrders);
         setIsLoading(false);
       } else {
         setError(
@@ -132,7 +135,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
       }
     } else {
       setIsLoading(true);
-      handleSubmit(`automated/get/packages`);
+      handleSubmit(`automated/get/packages`, goToOrders);
       setIsLoading(false);
     }
   };

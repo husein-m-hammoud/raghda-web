@@ -12,7 +12,8 @@ const CopyableText = ({ text }) => {
 
   return (
     <div>
-      <span>{text}</span>
+      {/* <span>{text}</span> */}
+      <span dangerouslySetInnerHTML={{ __html: text.replace(/\n/g, '<br/>') }}></span>
       <button onClick={copyToClipboard}>
         {isCopied ? <FaRegCheckCircle /> : <FaRegCopy />}
       </button>

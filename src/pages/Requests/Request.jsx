@@ -1,8 +1,14 @@
 import { useParams } from "react-router-dom";
-import { Currency, Loading, TitleTwo, CopyableText , Back} from "../../components";
+import {
+  Currency,
+  Loading,
+  TitleTwo,
+  CopyableText,
+  Back,
+} from "../../components";
 import { useContextTranslate } from "../../Context/ContextAPI";
 import { Col, Container, Row } from "../../Grid-system";
-import { fileUrl, useFETCH , checkOrderStatus} from "../../Tools/APIs";
+import { fileUrl, useFETCH, checkOrderStatus } from "../../Tools/APIs";
 import { useEffect, useRef, useState } from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaRegCopy } from "react-icons/fa";
@@ -21,37 +27,31 @@ const Request = () => {
   }, [copys]);
   console.log({ dataAll });
 
-const renderCodes = () =>{
-  var codes = dataAll?.item_codes
-  
-  console.log({ codes });
-  if(codes) {
-    codes = JSON.parse(codes)
-  }
-  console.log({ codes });
-  return codes.map((item, index) => (
+  const renderCodes = () => {
+    var codes = dataAll?.item_codes;
 
-   <CopyableText text={item?.code} />
- 
-   
-  ));
- }
- useEffect(() => {
-  const fetchDataInterval = setInterval(async () => {
-    try {
-      // Call your asynchronous function here
-      const data = await checkOrderStatus();
-      reCallUrl();
-      console.log('reCallUrl');
-    } catch (error) {
-      console.error('Error fetching data:', error);
+    console.log({ codes });
+    if (codes) {
+      codes = JSON.parse(codes);
     }
-  }, 1 * 60 * 1000); // 5 minutes in milliseconds
+    console.log({ codes });
+    return codes.map((item, index) => <CopyableText text={item?.code} />);
+  };
+  useEffect(() => {
+    const fetchDataInterval = setInterval(async () => {
+      try {
+        // Call your asynchronous function here
+        const data = await checkOrderStatus();
+        reCallUrl();
+        console.log("reCallUrl");
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }, 1 * 60 * 1000); // 5 minutes in milliseconds
 
-  // Clear the interval on component unmount to avoid memory leaks
-  return () => clearInterval(fetchDataInterval);
-}, []); // Empty dependency array ensures useEffect runs only once
-
+    // Clear the interval on component unmount to avoid memory leaks
+    return () => clearInterval(fetchDataInterval);
+  }, []); // Empty dependency array ensures useEffect runs only once
 
   return (
     <section className="py-4">
@@ -239,27 +239,38 @@ const renderCodes = () =>{
                               : ""
                           } font-semibold`}
                         >
-                          {dataAll?.status == "FAILED"  ? 'WAITING' : dataAll?.status }
+                          {dataAll?.status == "FAILED"
+                            ? "WAITING"
+                            : dataAll?.status}
                         </div>
                       </div>
                     </Col>
-                    {dataAll?.item_codes != null &&   dataAll.status === "COMPLETED" && (
-                     <Col>
-                     <div className="flex gap-2 mb-2">
-                       <div className="font-semibold text-Pink">
-                         Codes :
-                       </div>
-                       <div
+                    {dataAll?.item_codes != null &&
+                      dataAll.status === "COMPLETED" && (
+                        <Col>
+                          <div className="flex gap-2 mb-2">
+                            <div className="font-semibold text-Pink">
+                              Codes :
+                            </div>
+                            <div className={`font-semibold`}>
+                              {renderCodes()}
+                            </div>
+                          </div>
+                        </Col>
+                      )}
                     
-                         className={`font-semibold`}
-                       >
-                        { renderCodes()}
-                       </div>
-                       
-                     </div>
-                   </Col>
+                    {dataAll?.q && (
+                      <Col>
+                        <div className="flex gap-2 mb-2">
+                          <div className="font-semibold text-Pink">
+                            {content.expiry_date} :
+                          </div>
+                          <div className={`  font-semibold`}>
+                            {dataAll?.expiry_date}
+                          </div>
+                        </div>
+                      </Col>
                     )}
-
                     {dataAll?.player_name && (
                       <Col>
                         <div className="flex gap-2 mb-2">
@@ -310,16 +321,17 @@ const renderCodes = () =>{
                         <div>{dataAll?.product_name}</div>
                       </div>
                     </Col>
-                    {dataAll?.package_name && dataAll?.product_name !== dataAll?.package_name &&  (
-                      <Col>
-                        <div className="flex gap-2 mb-2">
-                          <div className="font-semibold text-Pink">
-                            {content.Packages}:
+                    {dataAll?.package_name &&
+                      dataAll?.product_name !== dataAll?.package_name && (
+                        <Col>
+                          <div className="flex gap-2 mb-2">
+                            <div className="font-semibold text-Pink">
+                              {content.Packages}:
+                            </div>
+                            <div>{dataAll?.package_name}</div>
                           </div>
-                          <div>{dataAll?.package_name}</div>
-                        </div>
-                      </Col>
-                    )}
+                        </Col>
+                      )}
                     <Col>
                       <div className="flex gap-2 mb-2">
                         <div className="font-semibold text-Pink">
@@ -345,7 +357,6 @@ const renderCodes = () =>{
                 </Row>
               </Col>
             </Row>
-           
           </Col>
         </Row>
         <Back />

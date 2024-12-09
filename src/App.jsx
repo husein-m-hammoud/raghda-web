@@ -52,7 +52,7 @@ const App = () => {
     if (prem === "granted") {
       const fcm_token = await getToken(messaging, {
         vapidKey:
-          "BONx2o6NAkyiVasHiM-i1jM4yGGD8WaOdVKULD9cAWIbP_1xkL9JcSPy3qMuLUDnGbuiCc0A5lpwMxPL0C43meQ",
+          "BJhKPsuWk9Qs-m-F5jL_lGG1M6DJuOKlUsCrivjt3R1CzNjSDd9CBOxJg5VbwjJ9b-gGjIa1OEM1V1TvPOIDziU",
       });
       sessionStorage.setItem("fcm_token", fcm_token);
     } else if (prem === "denied") {

@@ -35,6 +35,7 @@ const PopUp = (props) => {
                     <button
                       className="w-full py-2 border border-Pink rounded-2xl text-white bg-Purple hover:bg-opacity-90"
                       onClick={props.onClick}
+                      disabled={props.disabled}
                     >
                       {content.Confirm}
                     </button>

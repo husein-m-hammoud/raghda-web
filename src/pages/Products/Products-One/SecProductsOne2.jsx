@@ -37,6 +37,28 @@ const SecProductsOne2 = () => {
   } = usePOST({});
   const handleSubmitMain = (e) => {
     e.preventDefault();
+
+    let language = localStorage.getItem("language");
+
+    var goToOrders = '/Orders';
+
+    if (formData.quantity < dataAll?.minimum_qut) {
+      setError(
+        language === "en"
+          ? "Quantity must be greater than or equal to " + dataAll?.minimum_qut
+          : `يجب أن تكون الكمية أكبر أو تساوي ${dataAll?.minimum_qut}`
+      );
+      return;
+    }
+    if (dataAll?.maximum_qut > 0 && formData.quantity > dataAll?.maximum_qut) {
+      setError(
+        language === "en"
+          ? "Quantity must be less than or equal to " + dataAll?.maximum_qut
+          : `يجب أن تكون الكمية أقل أو تساوي ${dataAll?.maximum_qut}`
+      );
+      return;
+    }
+   
     if (dataAll?.th_party_api_id) {
       if (
         dataPlayer?.data?.data?.username &&
@@ -44,8 +66,8 @@ const SecProductsOne2 = () => {
       ) {
         handleSubmit(
           `orders?local=${localStorage.getItem("language")}&player_name=` +
-            dataPlayer?.data?.data?.username
-        );
+            dataPlayer?.data?.data?.username,  goToOrders);
+        
       } else {
         setError(
           localStorage.getItem("language") === "en"
@@ -60,7 +82,7 @@ const SecProductsOne2 = () => {
           : `يجب أن تكون الكمية أكبر أو تساوي 1`
       );
     } else {
-      handleSubmit(`orders?local=${localStorage.getItem("language")}`);
+      handleSubmit(`orders?local=${localStorage.getItem("language")}`,  goToOrders);
     }
   };
   useEffect(() => {
