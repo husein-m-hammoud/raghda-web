@@ -78,13 +78,6 @@ const Footer = () => {
           </div>
           <div className="text-center space-y-1 mt-5">
             <h1>Copyright @ 2023 . All Rights Reserved </h1>
-            <h1 className="flex space-x-3 justify-center items-center">
-              <span>{content.icr} </span>
-              <span>
-                <img src={icr} alt="" width={50} />
-              </span>
-            </h1>
-            <h1 className="break-all">IdeaCodeReality.ICR@gmail.com</h1>
           </div>
         </Container>
       </footer>

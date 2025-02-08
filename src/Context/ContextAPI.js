@@ -54,6 +54,7 @@ const ContextProvider = ({ children }) => {
   useEffect(() => {
     setTest(pathname);
   }, [pathname]);
+  
   const { data } = useFETCH(
     localStorage.getItem("token") ? `profile?test=${test}` : ""
   );

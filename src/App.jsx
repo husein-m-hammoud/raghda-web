@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Footer, NavBar } from "./layout/index";
 import Swal from 'sweetalert2';
+import { getMessaging, onMessage } from "firebase/messaging";
+
 
 import {
   AboutUs,
@@ -52,34 +54,80 @@ const App = () => {
     if (prem === "granted") {
       const fcm_token = await getToken(messaging, {
         vapidKey:
-          "BJhKPsuWk9Qs-m-F5jL_lGG1M6DJuOKlUsCrivjt3R1CzNjSDd9CBOxJg5VbwjJ9b-gGjIa1OEM1V1TvPOIDziU",
+          "BONx2o6NAkyiVasHiM-i1jM4yGGD8WaOdVKULD9cAWIbP_1xkL9JcSPy3qMuLUDnGbuiCc0A5lpwMxPL0C43meQ",
       });
       sessionStorage.setItem("fcm_token", fcm_token);
     } else if (prem === "denied") {
-      console.log();
+      console.log('denied');
     }
   }
+  // useEffect(() => {
+  //   if ("serviceWorker" in navigator) {
+  //     window.addEventListener("load", async () => {
+  //       try {
+  //         const registration = await navigator.serviceWorker.register(
+  //           "/firebase-messaging-sw.js",
+  //           {
+  //           scope: "/",
+  //           }
+  //         );
+  //         console.log("تم تسجيل خدمة العمل بنجاح:", registration);
+  //       } catch (error) {
+  //         console.error("فشل تسجيل خدمة العمل:", error);
+  //       }
+  //     });
+  //   } else {
+  //     console.warn("متصفحك لا يدعم خدمات العمل.");
+  //   }
+  //   requestPermission();
+  // }, []);
+
   useEffect(() => {
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", async () => {
-        try {
-          const registration = await navigator.serviceWorker.register(
-            "/firebase-messaging-sw.js",
-            {
-              scope: "/firebase-cloud-messaging-push-scope",
-            }
-          );
-          console.log("تم تسجيل خدمة العمل بنجاح:", registration);
-        } catch (error) {
-          console.error("فشل تسجيل خدمة العمل:", error);
-        }
-      });
-    } else {
-      console.warn("متصفحك لا يدعم خدمات العمل.");
+      navigator.serviceWorker.register("/firebase-messaging-sw.js")
+        .then((registration) => {
+          console.log("🔥 Service Worker Registered:", registration);
+        })
+        .catch((error) => {
+          console.error("❌ Service Worker Registration Failed:", error);
+        });
     }
     requestPermission();
   }, []);
+  
 
+  const messaging = getMessaging();
+
+  useEffect(() => {
+    console.log("🔄 Checking Notification Permissions...");
+  
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        console.log("✅ Notification Permission Granted");
+  
+        // Listen for foreground messages
+        const unsubscribe = onMessage(messaging, (payload) => {
+          console.log("🔔 Foreground Notification Received:", payload);
+  
+          if (!payload.notification) {
+            console.error("🚨 Payload missing notification object", payload);
+            return;
+          }
+          alert("Test")
+  
+          new Notification(payload.notification.title, {
+            body: payload.notification.body,
+            icon: "/logo.png",
+          });
+          console.log("✅ Foreground Notification Displayed");
+        });
+  
+        return () => unsubscribe();
+      } else {
+        console.warn("🚫 Notification Permission Denied");
+      }
+    }).catch(err => console.error("🚨 Error requesting permission:", err));
+  }, []);
 
   useEffect(() => {
     const handleOnline = () => {
