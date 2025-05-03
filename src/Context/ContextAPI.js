@@ -51,14 +51,29 @@ const ContextProvider = ({ children }) => {
 
   const { pathname } = useLocation();
   const [test, setTest] = useState("");
+  const [profile, setProfile] = useState({});
+
   useEffect(() => {
     setTest(pathname);
   }, [pathname]);
   
-  const { data } = useFETCH(
+  const { data ,reCallUrl:profile_reCallUrl, prevUrl:profile_prevUrl} = useFETCH(
     localStorage.getItem("token") ? `profile?test=${test}` : ""
   );
-  const profile = data?.data.data;
+  useEffect(() => {
+   setProfile(data?.data.data)
+  }, [data]);
+  const [getProfile, setGetProfile] = useState(false);
+
+  useEffect(()=> {
+    if(profile_prevUrl) {
+      profile_reCallUrl(prevUrl)
+      console.log('hussein2');
+    }
+    console.log('hussein1');
+  },[getProfile])
+
+
 
   const [page, setPage] = useState(1);
   const [relod, setRelod] = useState(false);
@@ -104,6 +119,8 @@ if(profile?.locale&& profile?.locale?.toLowerCase()!=window.localStorage.getItem
         setTest,
         relod,
         setRelod,
+        getProfile,
+        setGetProfile,
      
       }}
     >

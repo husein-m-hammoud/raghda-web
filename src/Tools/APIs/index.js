@@ -7,10 +7,15 @@ import {
     Outlet,
 } from "react-router-dom";
 import { useContextTranslate } from "../../Context/ContextAPI";
-export const baseUrl = "https://dev-backend.raghdacell.com/api/";
-export const fileUrl = "https://dev-backend.raghdacell.com/storage/";
-//  export const baseUrl = "https://backend.raghdacell.com/api/";
-//  export const fileUrl = "https://backend.raghdacell.com/storage/";
+//export const baseUrl = "https://dev-backend.raghdacell.com/api/";
+//export const fileUrl = "https://dev-backend.raghdacell.com/storage/";
+
+// export const baseUrl = "http://localhost:8000/api/";
+// export const fileUrl = "http://localhost:8000/storage/";
+
+
+export const baseUrl = "https://backend.raghdacell.com/api/";
+export const fileUrl = "https://backend.raghdacell.com/storage/";
 //!=============================================================> post data login
 export const useLOGIN = (initialState) => {
     const [formData, setFormData] = useState(initialState); // data

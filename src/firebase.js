@@ -38,7 +38,8 @@ const firebaseConfig = {
     appId: "1:764479888397:web:2bbfc4846749fc29c48944",
     measurementId: "G-JEKQPFGC8E",
 };
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
 const app = initializeApp(firebaseConfig); // ✅ Ensure it's initialized
-export const messaging = getMessaging(app);
+export const messaging = isIOS ? {} : getMessaging(app);
 export const auth = getAuth(app);

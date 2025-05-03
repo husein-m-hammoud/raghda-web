@@ -10,34 +10,61 @@ const Requirements = ({
   content,
   handleSubmitPlayer,
   dataPlayer,
+  player_numbers
 }) => {
   const [requirementsData, setRequirementsData] = useState("");
+  let player_number = null;
 
-  useEffect(() => {
-    console.log('enter', )
-    if(formData?.player_id){
-        setFormData({
-            ...formData,
-            player_number: formData.player_id
-          });
+  // useEffect(() => {
+  //   console.log('enter', )
+  //   if(formData?.player_id){
+  //       setFormData({
+  //           ...formData,
+  //           player_number: formData.player_id
+  //         });
 
-    }
-    if(formData?.playerId){
-      setFormData({
-          ...formData,
-          player_number: formData.playerId
-        });
-      }
-    if(formData?.id){
-      setFormData({
-          ...formData,
-          player_number: formData.id
-        });
-      }
+  //   }
+  //   if(formData?.playerId){
+  //     setFormData({
+  //         ...formData,
+  //         player_number: formData.playerId
+  //       });
+  //     }
+  //   if(formData?.id){
+  //     setFormData({
+  //         ...formData,
+  //         player_number: formData.id
+  //       });
+  //     }
 
   
-    console.log({formData})
-  },[formData?.player_id, formData?.id, formData?.playerId])
+  //   console.log({formData})
+  // },[formData?.player_id, formData?.id, formData?.playerId])
+
+  useEffect(() => {
+    console.log('enter');
+  
+    let parsedPlayerNumbers = [];
+  
+    try {
+      parsedPlayerNumbers = JSON.parse(player_numbers); // Parse the JSON string
+    } catch (error) {
+      console.error("Error parsing player_numbers:", error);
+      
+    }
+  
+    if (Array.isArray(parsedPlayerNumbers) && parsedPlayerNumbers.length > 0) {
+      const foundKey = parsedPlayerNumbers.find(key => formData?.[key] !== undefined);
+      
+      if (foundKey) {
+        player_number = formData[foundKey]
+
+      }
+    }
+  
+    console.log({ formData });
+  }, [player_numbers, formData]);
+  
 
   useEffect(() => {
     if(data?.requirements) {
@@ -68,7 +95,7 @@ const Requirements = ({
   return (
     <>
     {renderRequirements()}
-      {data?.th_party_api_id && !data?.require_player_number && !data?.th_party_as7ab_api  && (
+      {data?.th_party_api_id && !data?.require_player_number && !data?.th_party_as7ab_api && (
         <>
 
           <div className="flex flex-col">
@@ -82,7 +109,7 @@ const Requirements = ({
                       "th-p-apis/" +
                         data?.th_party_api_id +
                         "?number=" +
-                        formData?.player_number,
+                        player_number,
                       "",
                       true
                     )
@@ -112,7 +139,7 @@ const Requirements = ({
                   className="relative"
                   onClick={() =>
                     handleSubmitPlayer(
-                        "automated/get/player/name/"+formData?.player_number+"/"+data?.th_party_as7ab_api,
+                        "automated/get/player/name/"+player_number+"/"+data?.th_party_as7ab_api,
                       "",
                       true
                     )

@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Footer, NavBar } from "./layout/index";
-import Swal from 'sweetalert2';
-import { getMessaging, onMessage } from "firebase/messaging";
-
+import Swal from "sweetalert2";
+import { onMessage } from "firebase/messaging";
 
 import {
   AboutUs,
@@ -16,7 +15,6 @@ import {
   ProductsFive,
   ApiProducts,
   ApiProductsPackage,
-  
   ProductsFour,
   ProductsOne,
   ProductsThree,
@@ -40,8 +38,11 @@ import { BsWhatsapp } from "react-icons/bs";
 import { RequireAuth, useFETCH } from "./Tools/APIs";
 import { getToken } from "firebase/messaging";
 import { messaging } from "./firebase";
+import { useContextTranslate } from "./Context/ContextAPI";
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
 const App = () => {
+  const { getProfile, setGetProfile } = useContextTranslate();
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -50,116 +51,108 @@ const App = () => {
     `contact-us/info?local=${localStorage.getItem("language")}`
   );
   async function requestPermission() {
+    // Detect iOS (Safari, Chrome, Edge, Firefox – all browsers on iOS use WebKit)
+
+    if (isIOS) {
+      console.warn("🚫 Firebase Messaging is not supported on iOS browsers.");
+      return;
+    }
+    console.log("requestPermission");
     const prem = await Notification.requestPermission();
+    console.log({ prem });
     if (prem === "granted") {
       const fcm_token = await getToken(messaging, {
         vapidKey:
           "BONx2o6NAkyiVasHiM-i1jM4yGGD8WaOdVKULD9cAWIbP_1xkL9JcSPy3qMuLUDnGbuiCc0A5lpwMxPL0C43meQ",
       });
+      console.log("FCM Token: ", fcm_token);
       sessionStorage.setItem("fcm_token", fcm_token);
     } else if (prem === "denied") {
-      console.log('denied');
+      console.log("denied");
     }
   }
-  // useEffect(() => {
-  //   if ("serviceWorker" in navigator) {
-  //     window.addEventListener("load", async () => {
-  //       try {
-  //         const registration = await navigator.serviceWorker.register(
-  //           "/firebase-messaging-sw.js",
-  //           {
-  //           scope: "/",
-  //           }
-  //         );
-  //         console.log("تم تسجيل خدمة العمل بنجاح:", registration);
-  //       } catch (error) {
-  //         console.error("فشل تسجيل خدمة العمل:", error);
-  //       }
-  //     });
-  //   } else {
-  //     console.warn("متصفحك لا يدعم خدمات العمل.");
-  //   }
-  //   requestPermission();
-  // }, []);
 
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/firebase-messaging-sw.js")
-        .then((registration) => {
-          console.log("🔥 Service Worker Registered:", registration);
-        })
-        .catch((error) => {
-          console.error("❌ Service Worker Registration Failed:", error);
-        });
+    if (!isIOS) {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/firebase-messaging-sw.js")
+          .then((registration) => {
+            console.log("🔥 Service Worker Registered:", registration);
+          })
+          .catch((error) => {
+            console.error("❌ Service Worker Registration Failed:", error);
+          });
+      }
     }
     requestPermission();
   }, []);
-  
+  if (!isIOS) {
+    onMessage(messaging, (payload) => {
+      console.log("📩 TEST Foreground Notification Received:", payload);
 
-  const messaging = getMessaging();
+      if (!payload.notification) {
+        console.log("🚨 Payload missing notification object", payload);
+        return;
+      }
+
+      // alert("Test");
+
+      setGetProfile(!getProfile);
+      new Notification(payload.notification.title, {
+        body: payload.notification.body,
+        icon: "/logo.png",
+      });
+
+      console.log("✅ Foreground Notification Displayed");
+    });
+  }
 
   useEffect(() => {
+    if(!isIOS) {
     console.log("🔄 Checking Notification Permissions...");
-  
-    Notification.requestPermission().then((permission) => {
-      if (permission === "granted") {
-        console.log("✅ Notification Permission Granted");
-  
-        // Listen for foreground messages
-        const unsubscribe = onMessage(messaging, (payload) => {
-          console.log("🔔 Foreground Notification Received:", payload);
-  
-          if (!payload.notification) {
-            console.error("🚨 Payload missing notification object", payload);
-            return;
-          }
-          alert("Test")
-  
-          new Notification(payload.notification.title, {
-            body: payload.notification.body,
-            icon: "/logo.png",
-          });
-          console.log("✅ Foreground Notification Displayed");
-        });
-  
-        return () => unsubscribe();
-      } else {
-        console.warn("🚫 Notification Permission Denied");
-      }
-    }).catch(err => console.error("🚨 Error requesting permission:", err));
+
+    Notification.requestPermission()
+      .then((permission) => {
+        if (permission === "granted") {
+          console.log("✅ Notification Permission Granted");
+        } else {
+          console.warn("🚫 Notification Permission Denied");
+        }
+      })
+      .catch((err) => console.error("🚨 Error requesting permission:", err));
+    }
   }, []);
 
   useEffect(() => {
     const handleOnline = () => {
       Swal.fire({
-        icon: 'success',
-        title: 'Online',
-        text: 'You are online!',
+        icon: "success",
+        title: "Online",
+        text: "You are online!",
         timer: 2000,
         timerProgressBar: true,
-
       });
     };
 
     const handleOffline = () => {
       Swal.fire({
-        icon: 'error',
-        title: 'Offline',
-        text: 'You are offline!',
+        icon: "error",
+        title: "Offline",
+        text: "You are offline!",
         timer: 2000,
         timerProgressBar: true,
       });
     };
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
-
 
   return (
     <div className="relative ov">
@@ -193,9 +186,10 @@ const App = () => {
               <Route path="products-4/:id" element={<ProductsFour />} />
               <Route path="products-5/:id" element={<ProductsFive />} />
               <Route path="products-6/:id" element={<ApiProducts />} />
-              <Route path="products-6/packages/:id" element={<ApiProductsPackage />} />
-
-
+              <Route
+                path="products-6/packages/:id"
+                element={<ApiProductsPackage />}
+              />
             </Route>
           </Route>
           <Route path="Contact-us" element={<Contact />} />

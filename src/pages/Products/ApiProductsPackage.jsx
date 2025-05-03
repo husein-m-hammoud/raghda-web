@@ -18,6 +18,7 @@ const ApiProductsPackage = () => {
   const { id } = useParams();
   const [isLoad, setIsLoad] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const { data: player_numbers } = useFETCH(`player_number/info`);
 
   const [showUnavailablePopup, setShowUnavailablePopup] = useState(false);
 
@@ -31,13 +32,10 @@ const ApiProductsPackage = () => {
   console.log({ dataAll });
 
   const calculatePrice = (price = null, percentage = null) => {
-    console.log(price, percentage, "percentage");
     if (percentage <= 0 || percentage == undefined) {
       return price;
     }
     const newPrice = price * (1 + percentage / 100);
-    console.log(newPrice, "percentage");
-
     return newPrice;
   };
   const notShowInPopup = [
@@ -65,8 +63,8 @@ const ApiProductsPackage = () => {
   const handleSubmitMain = (e) => {
     e.preventDefault();
 
-    var goToOrders = '/Orders';
-    
+    var goToOrders = "/Orders";
+
     // if (dataAll?.product_reference == 184798 && formData.qty > 3) {
     //   setError(
     //       language === "en"
@@ -101,33 +99,11 @@ const ApiProductsPackage = () => {
       return;
     }
 
-    if (
-      (dataAll?.th_party_api_id || dataAll?.th_party_as7ab_api) &&
-      dataAll?.require_player_number != 1
-    ) {
-      if (
-        dataPlayer?.data?.data?.username &&
-        formData?.player_number === checkNumber
-      ) {
-        setIsLoad(true);
-        setDisabled(true);
-        handleSubmit(`automated/get/packages`, goToOrders);
-        setDisabled(false);
-        setIsLoad(false);
-      } else {
-        setError(
-          language === "en"
-            ? "The player number must be correct."
-            : "يجب ان يكون رقم اللاعب صحيح"
-        );
-      }
-    } else {
-      setIsLoad(true);
-      setDisabled(true);
-      handleSubmit(`automated/get/packages`, goToOrders);
-      setDisabled(false);
-      setIsLoad(false);
-    }
+    setIsLoad(true);
+    setDisabled(true);
+    handleSubmit(`automated/get/packages`, goToOrders);
+    setDisabled(false);
+    setIsLoad(false);
   };
   useEffect(() => {
     if (dataPlayer?.data?.data?.username) {
@@ -206,7 +182,6 @@ const ApiProductsPackage = () => {
 
     return result;
   }
-
   return (
     <div className="py-4 mt-4 font-semibold">
       {isLoading ? <Loading /> : ""}
@@ -313,6 +288,7 @@ const ApiProductsPackage = () => {
               loadingPlayer={loadingPlayer}
               content={content}
               dataPlayer={dataPlayer}
+              player_numbers={player_numbers?.data?.data?.player_number}
             />
 
             <p className="text-red-600">{dataAll?.note ? dataAll?.note : ""}</p>

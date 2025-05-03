@@ -14,7 +14,7 @@ export { default as Currency } from "./Currency/Currency";
 export { default as CopyableText } from "./ApiProducts/CopyableText";
 export { default as Back } from "./Buttons/Back";
 export { default as UnavvailablePopup } from "./ApiProducts/UnavvailablePopup";
-
+export { default as TokenModal} from "./PopUp/TokenModal";
 
 export { default as Requirements } from "./ApiProducts/Requirements";
 

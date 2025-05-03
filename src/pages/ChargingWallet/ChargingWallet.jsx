@@ -79,7 +79,7 @@ const ChargingWallet = () => {
                   <div className="w-[60px] mx-auto">
                     <img src={USDT} alt="" className="mx-auto" />
                   </div>
-                  <h6 className="max-sm:text-[16px]">USDT-TRC20</h6>
+                  <h6 className="max-sm:text-[16px]">USDT</h6>
                 </Col>
               ) : (
                 ""
@@ -151,6 +151,7 @@ const ChargingWallet = () => {
                     : "hidden"
                 }`}
               >
+                {active === "USDT" && (<label className="">USDT TRC20</label>)}
                 <div className="bg-[#9A9A9A] text-white rounded-2xl py-5 px-8 flex justify-between items-center">
                   <span
                     ref={text}
@@ -158,7 +159,7 @@ const ChargingWallet = () => {
                     className=" break-all"
                   >
                     {active === "USDT"
-                      ? `${dataAll?.usdt_text || "Loading..."}`
+                      ? `${dataAll?.usdt_trc20 || "Loading..."}`
                       : active === "OMT_PAY"
                       ? `${dataAll?.omt_pay_text || "Loading..."}`
                       : `${dataAll?.whish_money_text || "Loading..."}`}
@@ -178,8 +179,37 @@ const ChargingWallet = () => {
                     />
                   )}
                 </div>
+                {active === "USDT" && (
+                  <div className="mt-3">
+                  <label className="">USDT BEP20</label>
+                  <div className="bg-[#9A9A9A] text-white rounded-2xl py-5 px-8 flex justify-between items-center">
+                    <span
+                      ref={text}
+                      onCopy={() => setCopy(true)}
+                      className=" break-all"
+                    >
+                      {`${dataAll?.usdt_bep20 || "Loading..."}`}
+                    </span>
+                    {copys ? (
+                      <FaRegCheckCircle size={30} />
+                    ) : (
+                      <img
+                        src={copy}
+                        onClick={() => {
+                          navigator.clipboard.writeText(text.current.innerHTML);
+                          setCopy(true);
+                        }}
+                        alt=""
+                        width={25}
+                        className="cursor-pointer"
+                      />
+                    )}
+                  </div>
+                  </div>
+                )}
+
                 <div>
-                  <div>{content.TheValue}</div>
+                  <div className="mt-3">{content.TheValue}</div>
                   <input
                     type="number"
                     name="value"

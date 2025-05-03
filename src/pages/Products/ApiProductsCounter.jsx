@@ -7,7 +7,7 @@ import {
   PopUp,
   Requirements,
   TitleTwo,
-  UnavvailablePopup
+  UnavvailablePopup,
 } from "../../components";
 import { NavLink } from "react-router-dom";
 
@@ -18,6 +18,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
   const { content, showPopUp, setShowPopUp, profile } = useContextTranslate();
   const { id } = useParams();
   const [showUnavailablePopup, setShowUnavailablePopup] = useState(false);
+  const { data: player_numbers } = useFETCH(`player_number/info`);
 
   const [checkNumber, setCheckNumber] = useState("");
 
@@ -33,7 +34,6 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
     "product_id",
     "player_number",
     "product_reference",
-    
   ];
 
   let mergedData, package_id;
@@ -45,7 +45,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
     dataPackages?.data?.data[0].type !== "package"
   ) {
     mergedData = dataPackages?.data?.data[0];
-  
+
     package_id = mergedData?.id;
     mergedData["package_id"] = package_id;
     mergedData["images"] = dataAll?.images;
@@ -74,7 +74,6 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
     //window.location.reload();
   };
 
-
   const {
     handleChangeInput,
     handleSubmit,
@@ -91,8 +90,8 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
   } = usePOST({});
   const handleSubmitMain = (e) => {
     e.preventDefault();
-    var goToOrders = '/Orders';
-    
+    var goToOrders = "/Orders";
+
     if (formData.qty < dataAll?.minimum_qut) {
       setError(
         language === "en"
@@ -109,43 +108,17 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
       );
       return;
     }
-    if (
-      (dataAll?.th_party_api_id || dataAll?.th_party_as7ab_api) &&
-      dataAll?.require_player_number != 1
-    ) {
-      console.log(
-        "Please",
-        dataAll?.require_player_number,
-        dataAll?.th_party_api_id,
-        dataAll?.th_party_as7ab_api
-      );
-      if (
-        dataPlayer?.data?.data?.username &&
-        formData?.player_number === checkNumber
-      ) {
-        setIsLoading(true);
-        handleSubmit(`automated/get/packages` , goToOrders);
-        setIsLoading(false);
-      } else {
-        setError(
-          language === "en"
-            ? "The player number must be correct."
-            : "يجب ان يكون رقم اللاعب صحيح"
-        );
-      }
-    } else {
-      setIsLoading(true);
-      handleSubmit(`automated/get/packages`, goToOrders);
-      setIsLoading(false);
-    }
+
+    setIsLoading(true);
+    handleSubmit(`automated/get/packages`, goToOrders);
+    setIsLoading(false);
   };
   const calculatePrice = (price = null, percentage = null) => {
-    console.log(price, percentage, "percentage");
     if (percentage <= 0 || percentage == undefined) {
       return price;
     }
     let newPrice = price * (1 + percentage / 100);
-  
+
     return newPrice;
   };
 
@@ -158,21 +131,23 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
         player_name: dataPlayer?.data?.data?.username,
       });
     }
-
   }, [dataPlayer?.data?.data?.username]);
 
   useEffect(() => {
-    if(dataAll != null) {
-    setShowUnavailablePopup(dataAll?.is_available == 0 || dataAll?.force_unavailable == 1  ? true : false);
+    if (dataAll != null) {
+      setShowUnavailablePopup(
+        dataAll?.is_available == 0 || dataAll?.force_unavailable == 1
+          ? true
+          : false
+      );
     }
-    
+
     setFormData({
       ...formData,
       qty: dataAll?.minimum_qut,
       product_id: dataAll?.package_id,
       product_reference: dataAll?.product_reference,
     });
-
   }, [dataAll]);
   function convertLabel(input) {
     // Replace underscore with a space
@@ -219,18 +194,19 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
     // }
     handleChangeInput(e);
   };
-  if(showUnavailablePopup) {
+  if (showUnavailablePopup) {
     return (
-      <UnavvailablePopup isOpen={true}  handleGoBackAndReload={handleGoBackAndReload}/>
-    )
+      <UnavvailablePopup
+        isOpen={true}
+        handleGoBackAndReload={handleGoBackAndReload}
+      />
+    );
   }
 
   return (
     <section className="py-3 font-semibold ">
       <Container>
         {isLoading ? <Loading /> : ""}
-       
-
 
         <div className="py-4 mt-4">
           <div className="flex justify-center gap-6 max-sm:flex-wrap">
@@ -296,7 +272,8 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
                 loadingPlayer={loadingPlayer}
                 content={content}
                 dataPlayer={dataPlayer}
-              />
+                player_numbers={player_numbers?.data?.data?.player_number}
+                />
 
               <p className="text-red-600">
                 {dataAll?.note ? dataAll?.note : ""}

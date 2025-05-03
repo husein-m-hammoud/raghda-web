@@ -1,5 +1,10 @@
 import { Container, Title } from "../../components/index";
 import { useContextTranslate } from "../../Context/ContextAPI";
+import { publicRequest, privateRequest } from '../../Context/CoinexApi';
+import axios from 'axios';
+
+import React, { useEffect, useState } from 'react';
+
 import { fileUrl, useFETCH } from "../../Tools/APIs";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper";
@@ -13,6 +18,7 @@ const AboutUs = () => {
     `about-us/info?local=${localStorage.getItem("language")}`
   );
   const dataAll = data?.data.data;
+
   return (
     <section className="py-4">
       <Container>

@@ -3,9 +3,12 @@ import { BiUser } from "react-icons/bi";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useContextTranslate } from "../Context/ContextAPI";
 import { logout, usePOST } from "../Tools/APIs";
+import { TokenModal } from "../components";
 
 const UserP = () => {
   const { pathname } = useLocation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [sure, setSure] = useState(false);
   const [show, setShow] = useState(false);
   const { content, profile } = useContextTranslate();
@@ -71,6 +74,19 @@ const UserP = () => {
                   {content.ChargingTheWallet}
                 </div>
               </NavLink>
+              {profile?.type === "COMPANY" && (
+                <NavLink
+                  to="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsModalOpen(true);
+                  }}
+                >
+                  <div className="px-3 py-2 hover:bg-Pink mb-1 hover:text-white rounded-xl p-1 font-semibold bg-white text-Pink ">
+                    {content.Token}
+                  </div>
+                </NavLink>
+              )}
               <NavLink to="shipping-payments">
                 <div className="px-3 py-2 hover:bg-Pink mb-1 hover:text-white rounded-xl p-1 font-semibold">
                   {content.ShippingPayments}
@@ -113,6 +129,11 @@ const UserP = () => {
           </div>
         </>
       )}
+      <TokenModal
+        open={isModalOpen}
+        user={profile}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
   );
 };
