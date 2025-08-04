@@ -85,6 +85,7 @@ const Requirements = ({
           name={item?.name}
           value={formData[item?.name]}
           onChange={handleChangeInput}
+          required = {true}
           className="w-full py-5 px-4  outline-none border border-[#707070] mt-3  rounded-xl"
           placeholder={item?.name == 'player_id' ? content.EnterThePlayerNumber : `Enter the ${item?.label} `}
         />

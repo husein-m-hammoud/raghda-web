@@ -109,10 +109,42 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
       return;
     }
 
+    // Validate required fields
+    const requirements = JSON.parse(dataAll?.requirements || "[]");
+    const fieldErrors = validateRequirements(requirements, formData, language);
+    if (fieldErrors.length > 0) {
+      setError(fieldErrors[0]); // Or show all in a list if you prefer
+      return;
+    }
+
     setIsLoading(true);
     handleSubmit(`automated/get/packages`, goToOrders);
     setIsLoading(false);
   };
+  const validateRequirements = (requirements, formData, language = "en") => {
+    const errors = [];
+
+    requirements.forEach((req) => {
+      const value = formData[req.name];
+
+      if (
+        value === undefined ||
+        value === null ||
+        value === "" ||
+        (Array.isArray(value) && value.length === 0)
+      ) {
+        const message =
+          language === "en"
+            ? `${req.label} is required.`
+            : `حقل ${req.label} مطلوب.`;
+
+        errors.push(message);
+      }
+    });
+
+    return errors;
+  };
+
   const calculatePrice = (price = null, percentage = null) => {
     if (percentage <= 0 || percentage == undefined) {
       return price;
@@ -225,6 +257,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
                     <input
                       name="qty"
                       type="number"
+                      step="1"
                       value={formData?.qty}
                       onChange={(e) => handleChangeQty(e)}
                       placeholder={dataAll?.minimum_qut || "1234..."}
@@ -273,7 +306,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
                 content={content}
                 dataPlayer={dataPlayer}
                 player_numbers={player_numbers?.data?.data?.player_number}
-                />
+              />
 
               <p className="text-red-600">
                 {dataAll?.note ? dataAll?.note : ""}

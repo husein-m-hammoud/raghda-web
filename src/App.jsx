@@ -32,6 +32,7 @@ import {
   Notifications,
   Search,
   SmsNumber,
+  GroupProducts,
 } from "./pages/index";
 import Navbar2 from "./layout/Navbar2";
 import { BsWhatsapp } from "react-icons/bs";
@@ -186,6 +187,8 @@ const App = () => {
               <Route path="products-4/:id" element={<ProductsFour />} />
               <Route path="products-5/:id" element={<ProductsFive />} />
               <Route path="products-6/:id" element={<ApiProducts />} />
+              <Route path="products-7/:id" element={<GroupProducts />} />
+
               <Route
                 path="products-6/packages/:id"
                 element={<ApiProductsPackage />}

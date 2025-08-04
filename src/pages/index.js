@@ -3,6 +3,9 @@ export { default as AboutUs } from "./AbooutUs/AboutUs";
 export { default as Products } from "./Products/Products";
 export { default as ProductsOne } from "./Products/Products-One/ProductsOne";
 export { default as ApiProducts } from "./Products/ApiProducts";
+export { default as GroupProducts } from "./Products/GroupProducts";
+
+
 export { default as ApiProductsPackage } from "./Products/ApiProductsPackage";
 //export { default as ApiProductsCounter } from "./Products/ApiProductsCounter";
 

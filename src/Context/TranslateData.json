@@ -136,7 +136,20 @@
         "Therearenonotificationstoshow": " There are no notifications to show",
         "Specificdate": "Specific date",
         "codeSignIn": "The verification code will be sent via WhatsApp within one minute to the number",
-        "code": "You will receive a verification code on WhatsApp within a minute."
+        "code": "You will receive a verification code on WhatsApp within a minute.",
+
+        "RechargeWithUSDT": "Recharge with USDT",
+        "AmountUSD": "Amount (USD)",
+        "SelectNetwork": "Select Network",
+        "RequestPayment": "Request Payment",
+        "EnterAmount": "Enter amount",
+        "WaitingForPayment": "⌛ Waiting for payment... It may take 2 to 5 minutes. You can click 'Done' — your balance will be updated automatically once the payment is confirmed.",
+        "ErrorCheckingPaymentStatus": "Error checking payment status",
+        "PaymentConfirmed": "✅ Payment confirmed!",
+        "MustPayExactAmount": "You must pay this exact amount. Do not pay more or less.",
+        "ExactAmountToPay": "Exact amount to pay",
+        "Close": "Close",
+        "Done": "Done"
     },
     "ar": {
         "Yes": "نعم",
@@ -275,6 +288,19 @@
         "Canceled": "ملغى",
         "Waiting": "منتظر",
         "Shippingvalue": "قيمة الشحن",
-        "LogOut": "تسجيل خروج"
+        "LogOut": "تسجيل خروج",
+
+        "RechargeWithUSDT": "اشحن باستخدام USDT",
+        "AmountUSD": "المبلغ (دولار أمريكي)",
+        "SelectNetwork": "اختر الشبكة",
+        "RequestPayment": "طلب الدفع",
+        "EnterAmount": "أدخل المبلغ",
+        "WaitingForPayment": "⌛ جارٍ انتظار الدفع... قد يستغرق من 2 إلى 5 دقائق. يمكنك النقر على 'تم' — سيتم تحديث رصيدك تلقائيًا عند تأكيد الدفع.",
+        "ErrorCheckingPaymentStatus": "حدث خطأ أثناء التحقق من حالة الدفع",
+        "PaymentConfirmed": "✅ تم تأكيد الدفع!",
+        "MustPayExactAmount": "يجب أن تدفع هذا المبلغ بالضبط. لا تدفع أكثر أو أقل.",
+        "ExactAmountToPay": "المبلغ المطلوب دفعه بالضبط",
+        "Close": "إغلاق",
+        "Done": "تم"
     }
 }

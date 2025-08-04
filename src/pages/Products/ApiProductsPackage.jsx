@@ -65,23 +65,6 @@ const ApiProductsPackage = () => {
 
     var goToOrders = "/Orders";
 
-    // if (dataAll?.product_reference == 184798 && formData.qty > 3) {
-    //   setError(
-    //       language === "en"
-    //       ? "Quantity must be less than or equal to  3"
-    //       : `يجب أن تكون الكمية أقل أو تساوي 3`
-    //   );
-    //   return;
-    // }
-    // if (dataAll?.automation_reference == 2 && formData.qty > 1) {
-    //   setError(
-    //       language === "en"
-    //       ? "Quantity must be equal to  1"
-    //       : `يجب أن تكون الكمية  تساوي 1`
-    //   );
-    //   return;
-    // }
-
     if (formData.qty < dataAll?.minimum_qut) {
       setError(
         language === "en"
@@ -99,12 +82,45 @@ const ApiProductsPackage = () => {
       return;
     }
 
+    // Validate required fields
+    const requirements = JSON.parse(dataAll?.requirements || "[]");
+    const fieldErrors = validateRequirements(requirements, formData, language);
+    if (fieldErrors.length > 0) {
+      setError(fieldErrors[0]); // Or show all in a list if you prefer
+      return;
+    }
+
     setIsLoad(true);
     setDisabled(true);
     handleSubmit(`automated/get/packages`, goToOrders);
     setDisabled(false);
     setIsLoad(false);
   };
+
+  const validateRequirements = (requirements, formData, language = "en") => {
+    const errors = [];
+
+    requirements.forEach((req) => {
+      const value = formData[req.name];
+
+      if (
+        value === undefined ||
+        value === null ||
+        value === "" ||
+        (Array.isArray(value) && value.length === 0)
+      ) {
+        const message =
+          language === "en"
+            ? `${req.label} is required.`
+            : `حقل ${req.label} مطلوب.`;
+
+        errors.push(message);
+      }
+    });
+
+    return errors;
+  };
+
   useEffect(() => {
     if (dataPlayer?.data?.data?.username) {
       setCheckNumber(formData?.player_number);
@@ -114,6 +130,7 @@ const ApiProductsPackage = () => {
       });
     }
   }, [dataPlayer?.data?.data?.username]);
+
   useEffect(() => {
     if (dataAll != null) {
       setShowUnavailablePopup(
@@ -130,6 +147,7 @@ const ApiProductsPackage = () => {
       product_reference: dataAll?.product_reference,
     });
   }, [dataAll]);
+
   const handleGoBackAndReload = () => {
     // Logic to go back one page and reload
 
@@ -205,6 +223,9 @@ const ApiProductsPackage = () => {
                     name="qty"
                     type="number"
                     value={formData.qty}
+                    step="1"
+                    inputMode="numeric"
+                    pattern="\d*"
                     onChange={handleChangeQty}
                     placeholder={dataAll?.minimum_qut || "1234..."}
                     className="py-5 px-4 border mt-3 border-[#707070] rounded-xl w-full outline-none"
