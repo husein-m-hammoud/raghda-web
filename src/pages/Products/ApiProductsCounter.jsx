@@ -110,11 +110,17 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
     }
 
     // Validate required fields
-    const requirements = JSON.parse(dataAll?.requirements || "[]");
-    const fieldErrors = validateRequirements(requirements, formData, language);
-    if (fieldErrors.length > 0) {
-      setError(fieldErrors[0]); // Or show all in a list if you prefer
-      return;
+    if (dataAll?.automation_reference != 14) {
+      const requirements = JSON.parse(dataAll?.requirements || "[]");
+      const fieldErrors = validateRequirements(
+        requirements,
+        formData,
+        language
+      );
+      if (fieldErrors.length > 0) {
+        setError(fieldErrors[0]); // Or show all in a list if you prefer
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -306,6 +312,7 @@ const ApiProductsCounter = ({ data, dataPackages }) => {
                 content={content}
                 dataPlayer={dataPlayer}
                 player_numbers={player_numbers?.data?.data?.player_number}
+                handleSubmitMain={handleSubmitMain}
               />
 
               <p className="text-red-600">

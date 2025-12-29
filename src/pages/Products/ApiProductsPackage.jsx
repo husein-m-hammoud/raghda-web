@@ -60,8 +60,13 @@ const ApiProductsPackage = () => {
     dataPlayer,
     loading: loadingPlayer,
   } = usePOST({});
+
   const handleSubmitMain = (e) => {
-    e.preventDefault();
+    if (e?.preventDefault) {
+      e.preventDefault();
+    }
+    console.log({ formData });
+   
 
     var goToOrders = "/Orders";
 
@@ -83,13 +88,18 @@ const ApiProductsPackage = () => {
     }
 
     // Validate required fields
-    const requirements = JSON.parse(dataAll?.requirements || "[]");
-    const fieldErrors = validateRequirements(requirements, formData, language);
-    if (fieldErrors.length > 0) {
-      setError(fieldErrors[0]); // Or show all in a list if you prefer
-      return;
+    if (dataAll?.automation_reference != 14) {
+      const requirements = JSON.parse(dataAll?.requirements || "[]");
+      const fieldErrors = validateRequirements(
+        requirements,
+        formData,
+        language
+      );
+      if (fieldErrors.length > 0) {
+        setError(fieldErrors[0]); // Or show all in a list if you prefer
+        return;
+      }
     }
-
     setIsLoad(true);
     setDisabled(true);
     handleSubmit(`automated/get/packages`, goToOrders);
@@ -310,6 +320,7 @@ const ApiProductsPackage = () => {
               content={content}
               dataPlayer={dataPlayer}
               player_numbers={player_numbers?.data?.data?.player_number}
+              handleSubmitMain={handleSubmitMain}
             />
 
             <p className="text-red-600">{dataAll?.note ? dataAll?.note : ""}</p>
