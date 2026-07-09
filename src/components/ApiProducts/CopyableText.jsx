@@ -11,13 +11,15 @@ const CopyableText = ({ text }) => {
   };
 
   return (
-    <div>
-      {/* <span>{text}</span> */}
-      <span dangerouslySetInnerHTML={{ __html: text.replace(/\n/g, '<br/>') }}></span>
-      <button onClick={copyToClipboard}>
+    <div className="flex items-start gap-1 max-w-full">
+      <span
+        title={text}
+        className="break-all line-clamp-3"
+        dangerouslySetInnerHTML={{ __html: text.replace(/\n/g, '<br/>') }}
+      ></span>
+      <button onClick={copyToClipboard} className="shrink-0 mt-0.5">
         {isCopied ? <FaRegCheckCircle /> : <FaRegCopy />}
       </button>
-      
     </div>
   );
 };

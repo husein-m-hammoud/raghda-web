@@ -26,9 +26,14 @@ export { default as ShippingPayments2 } from "./ShippingPayments/ShippingPayment
 export { default as ChargingWallet } from "./ChargingWallet/ChargingWallet";
 export { default as Sign } from "./Sign/Sign";
 export { default as SignUp } from "./Sign/SignUp";
+export { default as SmsNumber } from "./Sign/SmsNumber";
 export { default as Code } from "./Sign/Code";
 export { default as ForgetPassword } from "./Sign/ForgetPassword";
 export { default as SetPassword } from "./Sign/SetPassword";
-export { default as SmsNumber } from "./Sign/SmsNumber";
+export { default as SetPin } from "./Pin/SetPin";
+export { default as VerifyPin } from "./Pin/VerifyPin";
+export { default as ChangePin } from "./Pin/ChangePin";
+export { default as ForgetPin } from "./Pin/ForgetPin";
+export { default as ResetPin } from "./Pin/ResetPin";
 export { default as Notifications } from "./Notifications/Notifications";
 export { default as Search } from "./Search/Search";

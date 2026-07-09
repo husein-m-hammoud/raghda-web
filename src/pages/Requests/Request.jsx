@@ -262,7 +262,7 @@ const Request = () => {
                         </Col>
                       )}
                     
-                    {dataAll?.q && (
+                    {dataAll?.expiry_date && (
                       <Col>
                         <div className="flex gap-2 mb-2">
                           <div className="font-semibold text-Pink">

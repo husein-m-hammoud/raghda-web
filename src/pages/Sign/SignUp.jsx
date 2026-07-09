@@ -12,12 +12,14 @@ const SignUp = () => {
   const { content } = useContextTranslate();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [biShow, setBiShow] = useState(false);
-  const { handleSubmit, error, loading, setFormData, setError } = usePOST({});
+  const { handleSubmit, error, loading, setFormData } = usePOST({});
+  const [localError, setLocalError] = useState("");
   useEffect(() => {
     sessionStorage.removeItem("email");
     sessionStorage.removeItem("username");
     sessionStorage.removeItem("password");
     sessionStorage.removeItem("phone_number");
+    sessionStorage.removeItem("pin_code");
   }, []);
   const handleSubmitMain = (e) => {
     e.preventDefault();
@@ -25,26 +27,32 @@ const SignUp = () => {
     const email = sessionStorage.getItem("email");
     const username = sessionStorage.getItem("username");
     const phoneNumber = sessionStorage.getItem("phone_number");
+    const pinCode = sessionStorage.getItem("pin_code");
     if (!email) {
-      setError("Email field is required");
+      setLocalError("Email field is required");
       return;
     }
     if (!emailRegex.test(email)) {
-      setError("Invalid email format");
+      setLocalError("Invalid email format");
       return;
     }
     if (!username) {
-      setError("Username field is required");
+      setLocalError("Username field is required");
       return;
     }
     if (!phoneNumber) {
-      setError("Phone number field is required");
+      setLocalError("Phone number field is required");
       return;
     }
     if (!password || password.length < 8) {
-      setError("Password must be at least 8 characters long");
+      setLocalError("Password must be at least 8 characters long");
       return;
     }
+    if (!pinCode || !/^\d{4}$/.test(pinCode)) {
+      setLocalError("PIN must be exactly 4 digits");
+      return;
+    }
+    setLocalError("");
     handleSubmit(
       `signup?validate=1&local=${localStorage.getItem("language")}`,
       "/sign-up/code"
@@ -185,6 +193,31 @@ const SignUp = () => {
                       />
                     )}
                   </div>
+                  <div className="flex flex-col">
+                    <span
+                      style={{
+                        direction:
+                          localStorage.getItem("language") === "ar"
+                            ? "rtl"
+                            : "ltr",
+                      }}
+                    >
+                      {content.PinCode || "PIN Code (4 digits)"}
+                    </span>
+                    <input
+                      type="password"
+                      inputMode="numeric"
+                      maxLength={4}
+                      name="pin_code"
+                      onChange={(e) => {
+                        const v = e.target.value.replace(/\D/g, "").slice(0, 4);
+                        setFormData((prev) => ({ ...prev, pin_code: v }));
+                        sessionStorage.setItem("pin_code", v);
+                      }}
+                      className="w-full py-3 px-3 border border-[#94A3B8] outline-none bg-opacity-50 mb-2 rounded-md tracking-[0.5em] text-center"
+                      placeholder="****"
+                    />
+                  </div>
                   <div className="text-center mb-2 ">
                     <span>{content.toCreateACompanyAccountplease}</span>
                     <Link to="/Contact-us" className="underline  text-Pink  ">
@@ -194,7 +227,7 @@ const SignUp = () => {
                 </>
 
                 {loading ? <Loading /> : ""}
-                <div className="text-red-600">{error}</div>
+                <div className="text-red-600">{localError || error}</div>
                 <button
                   onClick={handleSubmitMain}
                   className="w-3/4 block mb-2 mx-auto py-3 bg-Pink text-white rounded-md"

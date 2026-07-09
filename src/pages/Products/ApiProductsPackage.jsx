@@ -66,7 +66,6 @@ const ApiProductsPackage = () => {
       e.preventDefault();
     }
     console.log({ formData });
-   
 
     var goToOrders = "/Orders";
 
@@ -78,6 +77,7 @@ const ApiProductsPackage = () => {
       );
       return;
     }
+    
     if (dataAll?.maximum_qut > 0 && formData.qty > dataAll?.maximum_qut) {
       setError(
         language === "en"
@@ -85,6 +85,17 @@ const ApiProductsPackage = () => {
           : `يجب أن تكون الكمية أقل أو تساوي ${dataAll?.maximum_qut}`
       );
       return;
+    }
+
+    if (formData?.phone) {
+      if (!/^\d{8}$/.test(formData.phone)) {
+        setError(
+          language === "en"
+            ? "Phone number must be exactly 8 digits."
+            : `يجب أن يكون رقم الهاتف مكونًا من 8 أرقام بالضبط.`
+        );
+        return;
+      }
     }
 
     // Validate required fields

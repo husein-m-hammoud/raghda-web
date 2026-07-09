@@ -7,11 +7,11 @@ import {
     Outlet,
 } from "react-router-dom";
 import { useContextTranslate } from "../../Context/ContextAPI";
-export const baseUrl = "https://dev-backend.raghdacell.com/api/";
-export const fileUrl = "https://dev-backend.raghdacell.com/storage/";
+// export const baseUrl = "https://dev-backend.raghdacell.com/api/";
+// export const fileUrl = "https://dev-backend.raghdacell.com/storage/";
 
-// export const baseUrl = "http://localhost:8000/api/";
-// export const fileUrl = "http://localhost:8000/storage/";
+export const baseUrl = "http://localhost:8000/api/";
+export const fileUrl = "http://localhost:8000/storage/";
 
 
 // export const baseUrl = "https://backend.raghdacell.com/api/";
@@ -56,6 +56,7 @@ export const useLOGIN = (initialState) => {
                 setLoading(false);
                 setError("");
                 localStorage.setItem("token", req.data.data.token);
+                sessionStorage.removeItem("pin_verified");
                 navigate("/");
             })
             .catch((e) => {
@@ -251,6 +252,7 @@ export const logout = (url) => {
         )
         .then((req) => {
             localStorage.removeItem("token");
+            sessionStorage.removeItem("pin_verified");
             window.location.reload();
         })
         .catch((e) => {});

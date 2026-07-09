@@ -5,16 +5,18 @@ import lob from "../images/Flag-of-Lebanon-4-623x467.png";
 import eng from "../images/images.jpg";
 import { useEffect, useState } from "react";
 import { useContextTranslate } from "../Context/ContextAPI";
-import { BsFillBellFill } from "react-icons/bs";
+import { BsFillBellFill, BsDownload } from "react-icons/bs";
 import { Col, Row } from "../Grid-system";
 import PopupNot from "./PopupNot";
 import UserP from "./UserP";
-import { useClose, usePOST } from "../Tools/APIs";
+import { useClose, usePOST, useFETCH } from "../Tools/APIs";
+
 import Switch from "react-switch";
 const NavBar = () => {
   const { pathname } = useLocation();
   const { mouse, open, setOpen } = useClose();
   const [currency, setCurrency] = useState();
+  const [apkLink, setApkLink] = useState();
   const { setFormData, handleSubmit } = usePOST();
   const { content, changeLanguage, changeLanguage2, profile } =
     useContextTranslate();
@@ -27,7 +29,16 @@ const NavBar = () => {
       locale: profile?.locale,
     });
     setCurrency(profile?.currency === "USD");
-  }, [pathname,profile]);
+  }, [pathname, profile]);
+
+  const { data, isLoading } = useFETCH(
+    `about-us/info?local=${localStorage.getItem("language")}`,
+  );
+  useEffect(() => {
+    if (data?.data?.data?.apk_link) {
+      setApkLink(data.data.data.apk_link);
+    }
+  }, [data]);
   return (
     <div ref={mouse}>
       <nav className="shadow-md sticky top-0 left-0 z-30 w-full bg-white max-sm:hidden">
@@ -74,6 +85,19 @@ const NavBar = () => {
                       <Link to="sign-in">{content.SignIn}</Link>
                     </li>
                   </>
+                )}
+
+                {apkLink && (
+                  <li>
+                    <a
+                      href={apkLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-green-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-green-700 transition"
+                    >
+                      {content.DownloadAPK}
+                    </a>
+                  </li>
                 )}
               </ul>
             </div>
@@ -247,6 +271,18 @@ const NavBar = () => {
               )}
             </ul>
           </div>
+          {apkLink && (
+            <div className="flex justify-center py-2 mt-1">
+              <a
+                href={apkLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-600 flex align-middle gap-2 text-white px-4 py-2 rounded-xl font-semibold hover:bg-green-700 transition"
+              >
+                <BsDownload size={18} />{content.DownloadAPK}
+              </a>
+            </div>
+          )}
           <Search />
         </Container>
       </nav>

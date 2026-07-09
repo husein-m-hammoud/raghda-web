@@ -92,6 +92,11 @@ const UserP = () => {
                   {content.ShippingPayments}
                 </div>
               </NavLink>
+              <NavLink to="change-pin">
+                <div className="px-3 py-2 hover:bg-Pink mb-1 hover:text-white rounded-xl p-1 font-semibold">
+                  {content.ChangePin || "Change PIN"}
+                </div>
+              </NavLink>
 
               <div
                 onClick={() => setSure(true)}
