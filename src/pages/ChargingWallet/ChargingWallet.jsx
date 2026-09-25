@@ -13,6 +13,7 @@ import AddImage from "../../Tools/AddFile";
 import { useFETCH, usePOST } from "../../Tools/APIs";
 import CopyBox from "./CopyBox"; // path depends on where you save the component
 import USDTRecharge from "./USDTRecharge";
+import TranslateData from "../../Context/TranslateData.json";
 
 const ChargingWallet = () => {
   const { content, profile } = useContextTranslate();
@@ -23,12 +24,18 @@ const ChargingWallet = () => {
     usdtBep: false,
     omt: false,
     wish: false,
+    note: false,
   });
 
   const usdtTrcRef = useRef();
   const usdtBepRef = useRef();
   const omtPayRef = useRef();
   const wishMoneyRef = useRef();
+  const whishNoteRef = useRef();
+
+  // Customer writes this in the Whish transfer Note; backend maps it to the
+  // user (note = user_id + 1000) and auto-credits the wallet.
+  const whishNote = profile?.id ? profile.id + 1000 : "";
 
   const {
     handleChangeInput,
@@ -69,6 +76,7 @@ const ChargingWallet = () => {
       usdtBep: usdtBepRef,
       omt: omtPayRef,
       wish: wishMoneyRef,
+      note: whishNoteRef,
     }[refKey];
 
     if (ref?.current) {
@@ -147,60 +155,81 @@ const ChargingWallet = () => {
                         copied={copied.wish}
                         onCopy={() => handleCopy("wish")}
                       />
+                      {whishNote && (
+                        <div className="mt-6 space-y-2">
+                          <label>{content.WhishNoteTitle}</label>
+                          <CopyBox
+                            ref={whishNoteRef}
+                            text={`${whishNote}`}
+                            copied={copied.note}
+                            onCopy={() => handleCopy("note")}
+                          />
+                          {/* Show the note instruction in BOTH languages
+                              regardless of the site language. */}
+                          <div className="text-sm text-gray-500" dir="ltr">
+                            {TranslateData.en.WhishNoteHint}
+                          </div>
+                          <div className="text-sm text-gray-500" dir="rtl">
+                            {TranslateData.ar.WhishNoteHint}
+                          </div>
+                        </div>
+                      )}
                     </>
                   )}
 
-                  <div>
-                    <label>{content.TheValue}</label>
-                    <input
-                      type="number"
-                      name="value"
-                      value={formData.value || ""}
-                      onChange={handleChangeInput}
-                      placeholder={content.EntertheValuetobesent}
-                      className="outline-none block w-full bg-slate-50 py-5 px-8 rounded-2xl"
-                    />
-                  </div>
+                  {/* Manual fields only for OMT. Whish is auto-created from the
+                      payment notification, so the customer just follows the note
+                      instructions above — no value / photo / send. */}
+                  {active === "OMT_PAY" && (
+                    <>
+                      <div>
+                        <label>{content.TheValue}</label>
+                        <input
+                          type="number"
+                          name="value"
+                          value={formData.value || ""}
+                          onChange={handleChangeInput}
+                          placeholder={content.EntertheValuetobesent}
+                          className="outline-none block w-full bg-slate-50 py-5 px-8 rounded-2xl"
+                        />
+                      </div>
 
-                  <div>
-                    <div>{content.Shippingvalue}</div>
-                    <div className="w-full py-2 px-5 bg-slate-300 rounded-xl">
-                      <Currency
-                        number={
-                          formData?.value -
-                            formData?.value *
-                              ((active === "USDT"
-                                ? +dataAll?.usdt_tax_percentage
-                                : active === "OMT_PAY"
-                                ? +dataAll?.omt_pay_tax_percentage
-                                : +dataAll?.whish_money_tax_percentage) /
-                                100) || 0
-                        }
-                      />
-                    </div>
-                  </div>
+                      <div>
+                        <div>{content.Shippingvalue}</div>
+                        <div className="w-full py-2 px-5 bg-slate-300 rounded-xl">
+                          <Currency
+                            number={
+                              formData?.value -
+                                formData?.value *
+                                  (+dataAll?.omt_pay_tax_percentage / 100) || 0
+                            }
+                          />
+                        </div>
+                      </div>
 
-                  <div>
-                    <div>{content.UploadPhoto}</div>
-                    <AddImage
-                      name="image"
-                      newImage={viewFile}
-                      onChange={handleChangeInput}
-                      title={content.Uploadthenotice}
-                      clickDeleteImage={() => {
-                        setViewFile("");
-                        setFormData({ ...formData, image: "" });
-                      }}
-                    />
-                    {loading && <Loading />}
-                    <div className="text-red-500 font-semibold">{error}</div>
-                  </div>
+                      <div>
+                        <div>{content.UploadPhoto}</div>
+                        <AddImage
+                          name="image"
+                          newImage={viewFile}
+                          onChange={handleChangeInput}
+                          title={content.Uploadthenotice}
+                          clickDeleteImage={() => {
+                            setViewFile("");
+                            setFormData({ ...formData, image: "" });
+                          }}
+                        />
+                        {loading && <Loading />}
+                        <div className="text-red-500 font-semibold">{error}</div>
+                      </div>
+                    </>
+                  )}
                 </>
               )}
 
               {active === "PROMO_CODE" ? (
                 <Code />
-              ) : (
+              ) : active === "OMT_PAY" ? (
                 <button
                   disabled={loading}
                   onClick={handleSubmitMain}
@@ -208,7 +237,7 @@ const ChargingWallet = () => {
                 >
                   {content.Send}
                 </button>
-              )}
+              ) : null}
             </div>
           )}
         </div>

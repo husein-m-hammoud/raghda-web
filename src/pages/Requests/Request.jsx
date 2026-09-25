@@ -13,6 +13,30 @@ import { useEffect, useRef, useState } from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaRegCopy } from "react-icons/fa";
 
+// Automated (number 6) packages define their own requirement fields, so the
+// order carries them as a flat {name: value} map (`order_fields`) rather than
+// fixed columns. Keys are the provider's raw field names, so tidy them up for
+// display only -- Arabic names are left untouched.
+const humanizeFieldName = (name = "") =>
+  name
+    .replace(/[_-]+/g, " ")
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b[a-z]/g, (c) => c.toUpperCase());
+
+const parseOrderFields = (raw) => {
+  if (!raw) return [];
+  try {
+    const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
+    return Object.entries(parsed).filter(
+      ([, value]) => value !== null && value !== ""
+    );
+  } catch {
+    return [];
+  }
+};
+
 const Request = () => {
   const { content } = useContextTranslate();
   const { id } = useParams();
@@ -20,6 +44,7 @@ const Request = () => {
     `orders/${id}?local=${localStorage.getItem("language")}`
   );
   const dataAll = data?.data.data;
+  const orderFields = parseOrderFields(dataAll?.order_fields);
   const [copys, setCopy] = useState(false);
   const text = useRef();
   useEffect(() => {
@@ -316,6 +341,18 @@ const Request = () => {
                         </div>
                       </Col>
                     )}
+                    {orderFields.map(([name, value]) => (
+                      <Col key={name}>
+                        <div className="flex gap-2 mb-2">
+                          <div className="font-semibold text-Pink">
+                            {humanizeFieldName(name)} :
+                          </div>
+                          <div className="font-semibold break-all">
+                            {String(value)}
+                          </div>
+                        </div>
+                      </Col>
+                    ))}
                     <Col>
                       <div className="flex gap-2 mb-2">
                         <div className="font-semibold text-Pink">

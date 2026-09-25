@@ -226,10 +226,12 @@ const App = () => {
           <Route path="verification-code" element={<Code />} />
           <Route path="set-password" element={<SetPassword />} />
           <Route path="forget-password" element={<ForgetPassword />} />
-          <Route path="set-pin" element={<SetPin />} />
-          <Route path="verify-pin" element={<VerifyPin />} />
-          <Route path="forget-pin" element={<ForgetPin />} />
-          <Route path="reset-pin" element={<ResetPin />} />
+          <Route element={<RequireAuth />}>
+            <Route path="set-pin" element={<SetPin />} />
+            <Route path="verify-pin" element={<VerifyPin />} />
+            <Route path="forget-pin" element={<ForgetPin />} />
+            <Route path="reset-pin" element={<ResetPin />} />
+          </Route>
         </Routes>
       </div>
       <Footer />

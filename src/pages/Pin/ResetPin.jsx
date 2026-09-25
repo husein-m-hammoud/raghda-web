@@ -59,7 +59,9 @@ const ResetPin = () => {
             onChange={(v) => setCode(v.replace(/\D/g, "").slice(0, 4))}
             numInputs={4}
             inputStyle="!w-10 border border-black rounded-xl h-12 w-12 mx-2 px-3 text-center"
-            renderInput={(props) => <input {...props} />}
+            renderInput={(props) => (
+              <input {...props} inputMode="numeric" pattern="[0-9]*" />
+            )}
           />
         </div>
 
@@ -71,7 +73,9 @@ const ResetPin = () => {
             numInputs={4}
             inputType="password"
             inputStyle="!w-10 border border-black rounded-xl h-12 w-12 mx-2 px-3 text-center"
-            renderInput={(props) => <input {...props} />}
+            renderInput={(props) => (
+              <input {...props} inputMode="numeric" pattern="[0-9]*" />
+            )}
           />
         </div>
 
@@ -83,7 +87,9 @@ const ResetPin = () => {
             numInputs={4}
             inputType="password"
             inputStyle="!w-10 border border-black rounded-xl h-12 w-12 mx-2 px-3 text-center"
-            renderInput={(props) => <input {...props} />}
+            renderInput={(props) => (
+              <input {...props} inputMode="numeric" pattern="[0-9]*" />
+            )}
           />
         </div>
 

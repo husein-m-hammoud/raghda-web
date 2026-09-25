@@ -207,6 +207,7 @@ const SignUp = () => {
                     <input
                       type="password"
                       inputMode="numeric"
+                      pattern="[0-9]*"
                       maxLength={4}
                       name="pin_code"
                       onChange={(e) => {

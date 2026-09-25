@@ -89,7 +89,7 @@ const ContextProvider = ({ children }) => {
   },[relod])
   const [products, setProducts] = useState([]);
   useEffect(() => {
-    setProducts(dataProducts?.data.data.slice(0, page));
+    setProducts(dataProducts?.data.data.slice(0, page) || []);
     console.log('newss')
   }, [dataProducts?.data.data, page]);
   

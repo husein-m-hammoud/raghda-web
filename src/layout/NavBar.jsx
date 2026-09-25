@@ -5,18 +5,24 @@ import lob from "../images/Flag-of-Lebanon-4-623x467.png";
 import eng from "../images/images.jpg";
 import { useEffect, useState } from "react";
 import { useContextTranslate } from "../Context/ContextAPI";
-import { BsFillBellFill, BsDownload } from "react-icons/bs";
+import { BsFillBellFill } from "react-icons/bs";
+import { FaApple, FaGooglePlay } from "react-icons/fa";
 import { Col, Row } from "../Grid-system";
 import PopupNot from "./PopupNot";
 import UserP from "./UserP";
-import { useClose, usePOST, useFETCH } from "../Tools/APIs";
+import { useClose, usePOST } from "../Tools/APIs";
 
 import Switch from "react-switch";
+
+// App store download links
+const IOS_APP_URL =
+  "https://apps.apple.com/us/app/raghda-recharge/id6707463131";
+const ANDROID_APP_URL =
+  "https://play.google.com/store/apps/details?id=com.r.recharge&hl=en";
 const NavBar = () => {
   const { pathname } = useLocation();
   const { mouse, open, setOpen } = useClose();
   const [currency, setCurrency] = useState();
-  const [apkLink, setApkLink] = useState();
   const { setFormData, handleSubmit } = usePOST();
   const { content, changeLanguage, changeLanguage2, profile } =
     useContextTranslate();
@@ -31,14 +37,6 @@ const NavBar = () => {
     setCurrency(profile?.currency === "USD");
   }, [pathname, profile]);
 
-  const { data, isLoading } = useFETCH(
-    `about-us/info?local=${localStorage.getItem("language")}`,
-  );
-  useEffect(() => {
-    if (data?.data?.data?.apk_link) {
-      setApkLink(data.data.data.apk_link);
-    }
-  }, [data]);
   return (
     <div ref={mouse}>
       <nav className="shadow-md sticky top-0 left-0 z-30 w-full bg-white max-sm:hidden">
@@ -87,18 +85,28 @@ const NavBar = () => {
                   </>
                 )}
 
-                {apkLink && (
-                  <li>
-                    <a
-                      href={apkLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-green-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-green-700 transition"
-                    >
-                      {content.DownloadAPK}
-                    </a>
-                  </li>
-                )}
+                <li>
+                  <a
+                    href={IOS_APP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="App Store"
+                    className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-opacity-80 transition"
+                  >
+                    <FaApple size={22} />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={ANDROID_APP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Google Play"
+                    className="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center hover:bg-green-700 transition"
+                  >
+                    <FaGooglePlay size={18} />
+                  </a>
+                </li>
               </ul>
             </div>
             <ul>
@@ -271,18 +279,24 @@ const NavBar = () => {
               )}
             </ul>
           </div>
-          {apkLink && (
-            <div className="flex justify-center py-2 mt-1">
-              <a
-                href={apkLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-600 flex align-middle gap-2 text-white px-4 py-2 rounded-xl font-semibold hover:bg-green-700 transition"
-              >
-                <BsDownload size={18} />{content.DownloadAPK}
-              </a>
-            </div>
-          )}
+          <div className="flex justify-center gap-3 py-2 mt-1">
+            <a
+              href={IOS_APP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-black flex items-center gap-2 text-white px-4 py-2 rounded-xl font-semibold hover:bg-opacity-80 transition"
+            >
+              <FaApple size={20} /> iOS
+            </a>
+            <a
+              href={ANDROID_APP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-600 flex items-center gap-2 text-white px-4 py-2 rounded-xl font-semibold hover:bg-green-700 transition"
+            >
+              <FaGooglePlay size={18} /> Android
+            </a>
+          </div>
           <Search />
         </Container>
       </nav>

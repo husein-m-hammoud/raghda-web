@@ -25,7 +25,7 @@ const Products = () => {
         <Title title={content.products} />
         <InfiniteScroll
           className="!overflow-hidden"
-          dataLength={products?.length}
+          dataLength={products?.length || 0}
           next={() => setPage(page + 15)}
           refreshFunction={() => console.log("1")}
           hasMore={dataProducts?.data.data.length > products?.length}
